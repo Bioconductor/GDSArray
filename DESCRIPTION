@@ -1,0 +1,28 @@
+Package: GDSArray
+Title: GDS back-end for DelayedArray object
+Version: 0.99.0
+Author: Qian Liu, Martin Morgan, Hervé Pagès
+Maintainer: Qian Liu <Qian.Liu@roswellpark.org>
+Description: Implement `GDSArray` and `GDSArraySeed` classes for GDS 
+    back-end of DelayedArray.
+Depends:
+    R (>= 3.5),
+    gdsfmt,
+    DelayedArray
+License: GPL-3
+Encoding: UTF-8
+URL: https://github.com/Bioconductor/GDSArray
+BugReports: https://github.com/Bioconductor/GDSArray/issues
+Imports: 
+    tools,
+    stats,
+    methods,
+    S4Vectors,
+    SNPRelate,
+    SeqArray,
+    SeqVarTools,
+    Biostrings
+LazyData: true
+RoxygenNote: 6.0.1
+Suggests: testthat
+

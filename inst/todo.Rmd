@@ -1,0 +1,18 @@
+## 
+- remove first_val for GDSArraySeed. 
+  used in ".extract_array_from_GDSArraySeed", for if any index is NULL, return the empty values of class(first_val). E.g., character(0), integer(0)... 
+- add unit tests. 
+- check R scripts for imports.  -- done!
+- check DESCRIPTION files. Depends, Imports. -- done!
+- check man folder, to have same structure as R folder.  -- done! 
+- import or importFrom SNPRelate, and SeqArray?? -- done!
+- pack up with a Biconductor/GDSArray package.
+
+- let VariantExperiment depend on GDSArray. 
+- R coding practice. sapply, if (, else (, function (...  -- done!
+
+2nd round: 
+- AllUtilities.R to have input as gdsfile, a character(). 
+- add example for GDSArraySeed, and GDSArray. 
+
+- GDSMatrix, automatically conversion from GDSArray if 2-dimensional. 
