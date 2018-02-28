@@ -2,6 +2,7 @@
 
 export(GDSArray)
 export(GDSArraySeed)
+export(gdsNodes)
 exportClasses(GDSArraySeed)
 exportMethods("gdsfile<-")
 exportMethods(dim)

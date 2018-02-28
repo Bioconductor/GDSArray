@@ -14,7 +14,9 @@ GDSArray(file, name = NA, index = c("list", "IndexList"))
 \arguments{
 \item{file}{the gds file name.}
 
-\item{name}{the gds array nodes to be read into GDSArray}
+\item{name}{the gds array node to be read into GDSArraySeed / GDSArray. For
+\code{GDSArray}, the default value for \code{name} is the
+genotype data.}
 
 \item{index}{the class of the index slot of the
 GDSArray. \code{IndexList} is a reference class list defined in
@@ -25,9 +27,28 @@ performance.}
 \description{
 GDSArraySeed / GDSArray classes and constructors for gds data.
 
-\code{GDSArraySeed}: The function to generate a GDSArraySeed for the later
-    conversion from gds file into GDSArray.
+\code{GDSArraySeed}: The function to generate a
+    GDSArraySeed for the later conversion from gds file into
+    GDSArray.
 
 \code{GDSArray}: The function to convert a gds file
     into the GDSArray data structure.
+}
+\examples{
+file <- SNPRelate::snpgdsExampleFileName()
+allnodes <- gdsNodes(file)  ## print all available gds nodes in file.
+allnodes
+GDSArraySeed(file, "genotype")
+GDSArray(file)
+GDSArray(GDSArraySeed(file, "genotype"))
+
+file1 <- SeqArray::seqExampleFileName("gds")
+allnodes1 <- gdsNodes(file1)  ## print all available gds nodes in file1. 
+allnodes1
+GDSArraySeed(file1, "genotype/data")
+GDSArray(file1)
+GDSArray(file1, "variant.id")
+GDSArray(file1, "sample.annotation/family")
+GDSArray(file1, "annotation/format/DP/data")
+GDSArray(file1, "annotation/info/DP")
 }

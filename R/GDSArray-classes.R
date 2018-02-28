@@ -18,8 +18,8 @@ setClass("GDSArraySeed",
         name="character",   # Name of the dataset in the gds file.
         dim = "integer",
         dimnames = "list",
-        permute = "logical"
-        ## , first_val = "ANY"      ## remove this slot. 
+        permute = "logical",
+        first_val = "ANY"      ## remove this slot. 
     )
 )
 
@@ -69,10 +69,13 @@ setMethod("extract_array", "GDSArraySeed", .extract_array_from_GDSArraySeed)
 ###
 
 #' GDSArraySeed
-#' @description \code{GDSArraySeed}: The function to generate a GDSArraySeed for the later
-#'     conversion from gds file into GDSArray.
+#' @description \code{GDSArraySeed}: The function to generate a
+#'     GDSArraySeed for the later conversion from gds file into
+#'     GDSArray.
 #' @param file the gds file name.
-#' @param name the gds array nodes to be read into GDSArray
+#' @param name the gds array node to be read into GDSArraySeed / GDSArray. For
+#'     \code{GDSArray}, the default value for \code{name} is the
+#'     genotype data.
 #' @export
 #' @rdname GDSArray-classes
 #' @importFrom SNPRelate snpgdsOpen snpgdsClose
@@ -90,17 +93,18 @@ GDSArraySeed <- function(file, name=NA)
         stop("'type' must be a single string or NA")
     file <- file_path_as_absolute(file)
 
-    ff <- .get_gdsdata_fileFormat(file)
-    if (ff == "SNP_ARRAY") {
-        f <- snpgdsOpen(file)
-        on.exit(snpgdsClose(f))
-    } else if (ff == "SEQ_ARRAY") {
-        f <- seqOpen(file)
-        on.exit(seqClose(f))
-    } else {
-        f <- openfn.gds(file)
-        on.exit(closefn.gds(f))
-    }
+    ## ff <- .get_gdsdata_fileFormat(file)
+
+    ## if (ff == "SNP_ARRAY") {
+    ##     f <- snpgdsOpen(file)
+    ##     on.exit(snpgdsClose(f))
+    ## } else if (ff == "SEQ_ARRAY") {
+    ##     f <- seqOpen(file)
+    ##     on.exit(seqClose(f))
+    ## } else {
+    ##     f <- openfn.gds(file)
+    ##     on.exit(closefn.gds(f))
+    ## }
     
     ## ## check if the node is array data. 
     ## arrayNodes <- .get_gdsdata_arrayNodes(f)
@@ -108,19 +112,19 @@ GDSArraySeed <- function(file, name=NA)
     ##     stop(wmsg("the `name` node must be an array data."))
     ## }
 
-    dims <- .get_gdsdata_dim(f, node = name)
-    dimnames <- .get_gdsdata_dimnames(f, node = name, fileFormat = ff)
+    dims <- .get_gdsdata_dim(file, node = name)
+    dimnames <- .get_gdsdata_dimnames(file, node = name)
 
     if (!identical(lengths(dimnames, use.names=FALSE), dims)) {
         stop(wmsg("the lengths of dimnames is not consistent with data dimensions."))
     }
 
-    first_val <- .read_gdsdata_first_val(f, node = name)
+    first_val <- .read_gdsdata_first_val(file, node = name)
 
     if (length(dims) == 1)
         permute = FALSE
     else 
-        permute = !.read_gdsdata_sampleInCol(f, node = name, fileFormat = ff)
+        permute = !.read_gdsdata_sampleInCol(file, node = name)
 
     if (permute) {
         dims <- rev(dims)
@@ -193,6 +197,24 @@ setMethod("DelayedArray", "GDSArraySeed",
 #'     performance.
 #' @export
 #' @rdname GDSArray-classes
+#' @examples
+#' file <- SNPRelate::snpgdsExampleFileName()
+#' allnodes <- gdsNodes(file)  ## print all available gds nodes in file.
+#' allnodes
+#' GDSArraySeed(file, "genotype")
+#' GDSArray(file)
+#' GDSArray(GDSArraySeed(file, "genotype"))
+#'
+#' file1 <- SeqArray::seqExampleFileName("gds")
+#' allnodes1 <- gdsNodes(file1)  ## print all available gds nodes in file1. 
+#' allnodes1
+#' GDSArraySeed(file1, "genotype/data")
+#' GDSArray(file1)
+#' GDSArray(file1, "variant.id")
+#' GDSArray(file1, "sample.annotation/family")
+#' GDSArray(file1, "annotation/format/DP/data")
+#' GDSArray(file1, "annotation/info/DP")
+
 GDSArray <- function(file, name=NA, index=c("list", "IndexList")){
     if (is(file, "GDSArraySeed")) {
         seed <- file
