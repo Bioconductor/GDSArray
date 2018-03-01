@@ -1,0 +1,168 @@
+---
+title: "_GDSArray_: GDS back-end of DelayedArray"
+author:
+- name: Qian Liu
+  affiliation: Roswell Park Comprehensive Cancer Center, Buffalo, NY
+- name: Hervé Pagès
+  affiliation: Fred Hutchinson Cancer Research Center, Seattle, WA
+- name: Martin Morgan
+  affiliation: Roswell Park Comprehensive Cancer Center, Buffalo, NY
+date: "last edit: 3/1/2018"
+output:
+  BiocStyle::html_document:
+      toc: true
+      toc_float: true
+package: GDSArray
+vignette: |
+  %\VignetteIndexEntry{GDSArray: GDS back-end of DelayedArray}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+GDSArray is a Bioconductor package that represents GDS back-end of DelayedArray. It could convert the GDS nodes in a DelayedArray data structure. The rich common methods and data operations defined on `GDSArray` makes it more R-user-friendly. The array data from GDS file are always returned with the first dimension being `variants/snps` and the second dimension being `samples`. This feature is consistent with the array data saved in `SummarizedExperiment`, and makes the `GDSArray` package more interoperable with other established Bioconductor data infrastructure. 
+
+# Package installation
+
+1. Download the package from Bioconductor. 
+
+```{r getPackage, eval=FALSE}
+source("https://bioconductor.org/biocLite.R")
+biocLite("GDSArray")
+```
+
+2. Load the package into R session.
+```{r Load}
+library(GDSArray)
+```
+
+```{r options, eval=FALSE, echo=FALSE}
+options(showHeadLines=3)
+options(showTailLines=3)
+```
+
+# GDS format introduction
+
+## Genomic Data Structure (GDS)
+The Bioconductor package `gdsfmt` has provided a high-level R interface to CoreArray Genomic Data Structure (GDS) data files, which is designed for large-scale datasets, especially for data which are much larger than the available random-access memory.  
+The GDS format has been widely used in genetic/genomic research for high-throughput genotyping or sequencing data. There are two major classes that extends the `gds.class`: `SNPGDSFileClass` suited for genotyping data (e.g., GWAS), and `SeqVarGDSClass` that are designed specifically for DNA-sequencing data. The file format attribute in each data classes are set as `SNP_ARRAY` and `SEQ_ARRAY`. There are rich functions written based on these data classes for common data operation and statistical analysis.  
+More details about GDS format could be found here: https://bioconductor.org/packages/release/bioc/vignettes/gdsfmt/inst/doc/gdsfmt_vignette.html. 
+
+
+### Basic GDS file operation.
+```{r gdsfmt}
+# cteate a GDS file
+f <- createfn.gds("test.gds")    
+# add a list to "test.gds"
+v <- letters
+m <- matrix(1:12, 4)
+a <- array(1:24, c(4,3,2))
+add.gdsn(f, name="vector", val=v)
+add.gdsn(f, name="matrix", val=m)
+add.gdsn(f, name="array", val=a)
+f
+# close
+closefn.gds(f)
+
+# open the same file
+f <- openfn.gds("test.gds")
+# read gds node
+read.gdsn(index.gdsn(f, "array"))
+# close the GDS file
+closefn.gds(f)
+```
+
+### SNP_ARRAY 
+`SNP_ARRAY` file format is defined in the package of `SNPRelate`, in the class of `SNPGDSFileClass`. This gds data format is designed for the snp array data, e.g., GWAS. 
+
+```{r, snpArray}
+file <- system.file("extdata", "hapmap_geno.gds", package = "SNPRelate")
+SNPRelate::snpgdsSummary(file)
+f <- SNPRelate::snpgdsOpen(file)
+f
+### first-level gds nodes.
+ls.gdsn(f)
+### required attributes for SNPGDSFileClass. 
+get.attr.gdsn(f$root)
+SNPRelate::snpgdsClose(f)
+```
+### SEQ_ARRAY
+`SEQ_ARRAY` file format is defined in the package of `SeqArray`, in the class of `SeqVarGDSClass`. This gds data format is designed for the sequencing data. e.g., WGS, WES...
+
+```{r, seqArray}
+file <- system.file(package="VariantExperiment", "extdata", "CEU_Exon.gds")
+## SeqArray::seqSummary(file)
+f <- SeqArray::seqOpen(file)
+ls.gdsn(f)
+### required gds nodes: sample.id, variant.id, position, chromosome, allele, and genotype.
+get.attr.gdsn(index.gdsn(f, "description"))
+node <- index.gdsn(f, "genotype/data")
+objdesp.gdsn(node)$dim  ## (ploidy x sample x variants)
+readex.gdsn(node, sel=list(1:2, 1:3, 1:3))
+SeqArray::seqClose(f)
+```
+# GDSArray, GDSMatrix 
+
+GDSArray is the GDS back-end of DelayedArray. It has methods like `dim`, `dimnames` defined, and it inherites array-like operations and methods from DelayedArray, e.g., the subsetting method of `[`.
+
+## Available GDS nodes 
+`gdsNodes` is an exported function, which takes the GDS file path as input, and return all available nodes that are convertable to `GDSArray`. The returned GDS node names will be used as input for the `GDSArray` constructor. 
+
+```{r, gdsNodes}
+gdsNodes(file)
+```
+
+## GDSArraySeed
+
+The `GDSArraySeed` is the seed for the `GDSArray` object, which is not exported from this package. Seed objects should contain the GDS file path, and are expected to satisfy the “seed contract” i.e. to support dim() and dimnames().
+
+```{r, GDSArraySeed}
+seed <- GDSArray:::GDSArraySeed(file, "genotype/data")
+seed
+```
+
+## GDSArray, GDSMatrix, and DelayedArray
+
+The `GDSArray` constructor over a single argument of `GDSArraySeed` will return the `GDSArray` object directly. Or it could take the arguments of filepath, and the GDS node inside the GDS file. The following 2 lines of code returns the same `GDSArray` object.  
+One thing to note, the `GDSArray` constructor always return the object with rows being "genes / variants / snps" and the columns being "samples", which is consistent with the assay data inside `SummarizedExperiment`. 
+
+```{r, GDSArray}
+GDSArray(seed)
+GDSArray(file, "genotype/data")
+```
+The `GDSMatrix` is the 2-dimensional `GDSArray`, and will be returned from the `GDSArray` constructor automatically if the input GDS node is 2-dimensional. 
+
+```{r, GDSMatrix}
+GDSArray(file, "phase/data")
+```
+
+The `DelayedArray` constructor over `GDSArraySeed` object will return the same content as `GDSArray` constructor over the same `GDSArraySeed`. 
+
+```{r, da}
+class(DelayedArray(seed))
+``` 
+
+## `GDSArray` methods
+
+### dim, dimnames
+The `dimnames(GDSArray)` returns an unnamed list, with the length of each element to be the same as return from `dim(GDSArray)`. 
+```{r, dims}
+ga <- GDSArray(file, "phase/data")
+dim(ga)
+class(dimnames(ga))
+lengths(dimnames(ga))
+```
+
+### `[` subsetting
+
+```{r, methods}
+ga[1:3, 10:15]
+ga[c(rep(c(TRUE, FALSE), 4), rep(FALSE, nrow(ga)-8)), ]
+```
+
+# sessionInfo
+```{r, sessionInfo}
+sessionInfo()
+```
+

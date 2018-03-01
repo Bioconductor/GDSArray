@@ -1,12 +1,6 @@
-#' GDSArraySeed / GDSArray classes and constructors for gds data.
-
 ### -----------------------------------------------------
 ### GDSArraySeed class 
 ###
-
-#' @importClassesFrom DelayedArray Array
-#' @export
-#' @rdname GDSArray-classes
 setClass("GDSArraySeed",
          contains = "Array", ## from DelayedArray: A virtual class with no slots
                              ## to be extended by concrete subclasses with
@@ -41,7 +35,6 @@ setMethod(
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### extract_array()
 ###
-#' @importMethodsFrom DelayedArray extract_array
 .extract_array_from_GDSArraySeed <- function(x, index)
 {
     ans_dim <- DelayedArray:::get_Nindex_lengths(index, dim(x))
@@ -62,22 +55,25 @@ setMethod(
     }
     ans
 }
+
+#' GDSArray constructor and coercion methods.
+#' @name extract_array
+#' @exportMethod extract_array
+#' @param x the GDSArraySeed object
+## #' @param index An unnamed list of subscripts as positive integer
+## #'     vectors, one vector per dimension in \code{x}. Empty and
+## #'     missing subscripts (represented by \code{integer(0)} and
+## #'     \code{NULL} list elements, respectively) are allowed. The
+## #'     subscripts can contain duplicated indices. They cannot contain
+## #'     NAs or non-positive values.
+#' @aliases extract_array,GDSArraySeed-method
+#' @rdname GDSArray-classes
 setMethod("extract_array", "GDSArraySeed", .extract_array_from_GDSArraySeed)
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### GDSArraySeed constructor
 ###
 
-#' GDSArraySeed
-#' @description \code{GDSArraySeed}: The function to generate a
-#'     GDSArraySeed for the later conversion from gds file into
-#'     GDSArray.
-#' @param file the gds file name.
-#' @param name the gds array node to be read into GDSArraySeed / GDSArray. For
-#'     \code{GDSArray}, the default value for \code{name} is the
-#'     genotype data.
-#' @export
-#' @rdname GDSArray-classes
 #' @importFrom SNPRelate snpgdsOpen snpgdsClose
 #' @importFrom SeqArray seqOpen seqClose seqSummary
 #' @import methods
@@ -92,25 +88,6 @@ GDSArraySeed <- function(file, name=NA)
     if (!isSingleStringOrNA(name))
         stop("'type' must be a single string or NA")
     file <- file_path_as_absolute(file)
-
-    ## ff <- .get_gdsdata_fileFormat(file)
-
-    ## if (ff == "SNP_ARRAY") {
-    ##     f <- snpgdsOpen(file)
-    ##     on.exit(snpgdsClose(f))
-    ## } else if (ff == "SEQ_ARRAY") {
-    ##     f <- seqOpen(file)
-    ##     on.exit(seqClose(f))
-    ## } else {
-    ##     f <- openfn.gds(file)
-    ##     on.exit(closefn.gds(f))
-    ## }
-    
-    ## ## check if the node is array data. 
-    ## arrayNodes <- .get_gdsdata_arrayNodes(f)
-    ## if(!name %in% arrayNodes){
-    ##     stop(wmsg("the `name` node must be an array data."))
-    ## }
 
     dims <- .get_gdsdata_dim(file, node = name)
     dimnames <- .get_gdsdata_dimnames(file, node = name)
@@ -149,18 +126,43 @@ GDSArraySeed <- function(file, name=NA)
 ### and DelayedMatrix objects.
 ###
 
-#' @importClassesFrom DelayedArray DelayedArray DelayedMatrix
+#' @import S4Vectors
+#' @import IRanges
+#' @import BiocGenerics
+#' @import DelayedArray
+#'
+#' @exportClass GDSArray
+#' @aliases GDSArray-class matrixClass,GDSArray-method
+#' @param file the gds file name.
+#' @param name the gds array node to be read into GDSArraySeed / GDSArray. For
+#'     \code{GDSArray}, the default value for \code{name} is the
+#'     genotype data.
+#' @rdname GDSArray-classes
 setClass("GDSArray", contains="DelayedArray")
+
+#' @name GDSMatrix
+#' @exportClass GDSMatrix
+#' @aliases GDSMatrix-class 
+#' @rdname GDSArray-classes
 setClass("GDSMatrix", contains=c("DelayedMatrix", "GDSArray"))
+
+### For internal use only.
+setMethod("matrixClass", "GDSArray", function(x) "GDSMatrix")
 
 ### Automatic coercion method from GDSArray to GDSMatrix (muted for
 ### higher dimensions) this function works only when GDSArray is
 ### 2-dimensional, otherwise, it fails.
+
+#' @name coerce
+#' @exportMethod coerce
+#' @aliases coerce,GDSArray,GDSMatrix-method
+#'     coerce,GDSMatrix,GDSArray-method coerce,ANY,GDSMatrix-method
+#' @rdname GDSArray-classes
+
 setAs("GDSArray", "GDSMatrix", function(from) new("GDSMatrix", from))    
 setAs("GDSMatrix", "GDSArray", function(from) from)
-
-### For internal use only.
-setMethod("matrixClass", "GDSArray", function(x) "GDSMatrix")
+setAs("ANY", "GDSMatrix",
+      function(from) as(as(from, "GDSArray"), "GDSMatrix"))
 
 .validate_GDSArray <- function(x)
 {
@@ -171,19 +173,12 @@ setMethod("matrixClass", "GDSArray", function(x) "GDSMatrix")
     TRUE
 }
 
-#' @importFrom S4Vectors setValidity2
 setValidity2("GDSArray", .validate_GDSArray)
-
-## setAs("ANY", "GDSMatrix",
-##       function(from) as(as(from, "GDSArray"), "GDSMatrix")
-##     )
-
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### Constructor
 ###
 
-#' @importFrom DelayedArray DelayedArray
 setMethod("DelayedArray", "GDSArraySeed",
           function(seed) DelayedArray:::new_DelayedArray(seed, Class="GDSArray")
           )
@@ -196,28 +191,33 @@ setMethod("DelayedArray", "GDSArraySeed",
 #'     GDSArrays to share the index slot, for a uniform subsetting
 #'     performance.
 #' @export
+#' @aliases GDSArray-method
 #' @rdname GDSArray-classes
 #' @examples
 #' file <- SNPRelate::snpgdsExampleFileName()
 #' allnodes <- gdsNodes(file)  ## print all available gds nodes in file.
 #' allnodes
-#' GDSArraySeed(file, "genotype")
 #' GDSArray(file)
-#' GDSArray(GDSArraySeed(file, "genotype"))
+#' GDSArray(file, "sample.annot/pop.group")
 #'
 #' file1 <- SeqArray::seqExampleFileName("gds")
 #' allnodes1 <- gdsNodes(file1)  ## print all available gds nodes in file1. 
 #' allnodes1
-#' GDSArraySeed(file1, "genotype/data")
 #' GDSArray(file1)
 #' GDSArray(file1, "variant.id")
 #' GDSArray(file1, "sample.annotation/family")
 #' GDSArray(file1, "annotation/format/DP/data")
 #' GDSArray(file1, "annotation/info/DP")
 
-GDSArray <- function(file, name=NA, index=c("list", "IndexList")){
+GDSArray <- function(file, name=NA, index=c("list", "IndexList"))
+{
     if (is(file, "GDSArraySeed")) {
+        if (!(missing(name) && missing(index)))
+            stop(wmsg("GDSArray() must be called with a single argument ",
+                      "when passed an GDSArraySeed object"))
         seed <- file
+        ## if (is(file, "GDSArraySeed")) {
+        ##     seed <- file
     } else {
         ff <- .get_gdsdata_fileFormat(file)
         if (ff == "SNP_ARRAY") {
@@ -227,9 +227,6 @@ GDSArray <- function(file, name=NA, index=c("list", "IndexList")){
         }
         seed <- GDSArraySeed(file, name)
     }
-    to <- "GDSArray"
-    if (length(dim(seed)) == 2L)
-        to <- "GDSMatrix"
-    as(DelayedArray(seed), to)
+    DelayedArray(seed)   ## does the automatic coercion to GDSMatrix if 2-dim.
 }
 

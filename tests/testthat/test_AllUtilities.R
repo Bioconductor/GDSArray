@@ -20,15 +20,14 @@ test_that("get gds all nodes, array nodes, and node dimension works", {
     allnodes <- gdsNodes(file)
     expect_true(is(allnodes, "character"))
 
-    ## dims
+    ## arraynodes, dims
+    arraynodes <- .get_gdsdata_arrayNodes(file)
     dims <- lapply(arraynodes, function(x) .get_gdsdata_dim(file, x))
     expect_true(validObject(dims))
 
     ## array nodes
     ndims <- lengths(dims)
     expect_true(all(ndims > 1))
-
-    
 })
 
 test_that("extracting gds node dimension orientation works", {
@@ -41,7 +40,7 @@ test_that("extracting gds node dimension orientation works", {
     file1 <- system.file(package="SeqArray", "extdata", "CEU_Exon.gds")
     expect_false(.read_gdsdata_sampleInCol(file1, "genotype/data"))
     expect_false(.read_gdsdata_sampleInCol(file1, "annotation/format/DP/data"))
-    expect_false(.read <- gdsdata <- sampleInCol(file1, "phase/data"))
+    expect_false(.read_gdsdata_sampleInCol(file1, "phase/data"))
 })
 
 

@@ -9,6 +9,8 @@
 \alias{gdsfile,GDSArray-method}
 \alias{gdsfile,DelayedArray-method}
 \alias{gdsfile<-}
+\alias{gdsfile<-,GDSArraySeed-method}
+\alias{gdsfile<-,GDSArray-method}
 \title{GDSArraySeed or GDSArray related methods, slot getters and setters.}
 \usage{
 \S4method{dim}{GDSArraySeed}(x)
@@ -24,10 +26,16 @@ gdsfile(x)
 \S4method{gdsfile}{DelayedArray}(x)
 
 gdsfile(x) <- value
+
+\S4method{gdsfile}{GDSArraySeed}(x) <- value
+
+\S4method{gdsfile}{GDSArray}(x) <- value
 }
 \arguments{
 \item{x}{GDSArray, GDSMatrix, GDSArraySeed or SummarizedExperiment
 object.}
+
+\item{value}{gds file path.}
 }
 \description{
 \code{dim}, \code{dimnames}: dimension and dimnames of
@@ -35,4 +43,6 @@ object.}
 
 \code{gdsfile}: on-disk location of GDS file
     represented by this object.
+
+\code{gdsfile<-}: the setter of the gds file path for `GDSArraySeed` and `GDSArray`.
 }
