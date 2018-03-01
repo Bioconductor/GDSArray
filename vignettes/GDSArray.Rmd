@@ -1,5 +1,5 @@
 ---
-title: "_GDSArray_: GDS back-end of DelayedArray"
+title: "GDSArray: Representing GDS files as array-like objects"
 author:
 - name: Qian Liu
   affiliation: Roswell Park Comprehensive Cancer Center, Buffalo, NY
@@ -14,18 +14,26 @@ output:
       toc_float: true
 package: GDSArray
 vignette: |
-  %\VignetteIndexEntry{GDSArray: GDS back-end of DelayedArray}
+  %\VignetteIndexEntry{GDSArray: Representing GDS files as array-like objects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r options, eval=TRUE, echo=FALSE}
+options(showHeadLines=3)
+options(showTailLines=3)
+```
+
 # Introduction
 
-GDSArray is a Bioconductor package that represents GDS back-end of DelayedArray. It could convert the GDS nodes in a DelayedArray data structure. The rich common methods and data operations defined on `GDSArray` makes it more R-user-friendly. The array data from GDS file are always returned with the first dimension being `variants/snps` and the second dimension being `samples`. This feature is consistent with the array data saved in `SummarizedExperiment`, and makes the `GDSArray` package more interoperable with other established Bioconductor data infrastructure. 
+[GDSArray][] is a _Bioconductor_ package that represents GDS files as objects derived from the [DelayedArray][] package and `DelayedArray` class. It converts a GDS node in the file to a `DelayedArray`-derived data structure. The rich common methods and data operations defined on `GDSArray` makes it more _R_-user-friendly than working with the GDS file directly. The array data from GDS files are always returned with the first dimension being `variants/snps` and the second dimension being `samples`. This feature is consistent with the array data saved in `SummarizedExperiment`, and makes the `GDSArray` package interoperable with other established _Bioconductor_ data infrastructure.
+
+[GDSArray]: https://bioconductor.org/packages/GDSArray
+[DelayedArray]: https://bioconductor.org/packages/DelayedArray
 
 # Package installation
 
-1. Download the package from Bioconductor. 
+1. Download the package from Bioconductor.
 
 ```{r getPackage, eval=FALSE}
 source("https://bioconductor.org/biocLite.R")
@@ -33,69 +41,56 @@ biocLite("GDSArray")
 ```
 
 2. Load the package into R session.
-```{r Load}
+```{r Load, message=FALSE}
 library(GDSArray)
-```
-
-```{r options, eval=FALSE, echo=FALSE}
-options(showHeadLines=3)
-options(showTailLines=3)
 ```
 
 # GDS format introduction
 
 ## Genomic Data Structure (GDS)
-The Bioconductor package `gdsfmt` has provided a high-level R interface to CoreArray Genomic Data Structure (GDS) data files, which is designed for large-scale datasets, especially for data which are much larger than the available random-access memory.  
-The GDS format has been widely used in genetic/genomic research for high-throughput genotyping or sequencing data. There are two major classes that extends the `gds.class`: `SNPGDSFileClass` suited for genotyping data (e.g., GWAS), and `SeqVarGDSClass` that are designed specifically for DNA-sequencing data. The file format attribute in each data classes are set as `SNP_ARRAY` and `SEQ_ARRAY`. There are rich functions written based on these data classes for common data operation and statistical analysis.  
-More details about GDS format could be found here: [gdsfmt](https://bioconductor.org/packages/release/bioc/vignettes/gdsfmt/inst/doc/gdsfmt_vignette.html), [SNPRelate](http://bioconductor.org/packages/release/bioc/vignettes/SNPRelate/inst/doc/SNPRelateTutorial.html), and [SeqArray](http://bioconductor.org/packages/release/bioc/vignettes/SeqArray/inst/doc/SeqArrayTutorial.html)
 
+The _Bioconductor_ package [gdsfmt][] has provided a high-level R interface to CoreArray Genomic Data Structure (GDS) data files, which is designed for large-scale datasets, especially for data which are much larger than the available random-access memory.
 
-# GDSArray, GDSMatrix 
+The GDS format has been widely used in genetic/genomic research for high-throughput genotyping or sequencing data. There are two major classes that extends the `gds.class`: `SNPGDSFileClass` suited for genotyping data (e.g., GWAS), and `SeqVarGDSClass` that are designed specifically for DNA-sequencing data. The file format attribute in each data class is set as `SNP_ARRAY` and `SEQ_ARRAY`. There are rich functions written based on these data classes for common data operation and statistical analysis.
 
-GDSArray is the GDS back-end of DelayedArray. It has methods like `dim`, `dimnames` defined, and it inherites array-like operations and methods from DelayedArray, e.g., the subsetting method of `[`.
+More details about GDS format can be found in the vignettes of the [gdsfmt][], [SNPRelate][], and [SeqArray][] packages.
 
-## Available GDS nodes 
-`gdsNodes` is an exported function, which takes the GDS file path as input, and return all available nodes that are convertable to `GDSArray`. The returned GDS node names will be used as input for the `GDSArray` constructor. 
+[gdsfmt]: https://bioconductor.org/packages/gdsfmt
+[SNPRelate]: https://bioconductor.org/packages/SNPRelate
+[SeqArray]: https://bioconductor.org/packages/SeqArray
+
+# `GDSArray`, `GDSMatrix`
+
+`GDSArray` represents GDS files as `DelayedArray` instances. It has methods like `dim`, `dimnames` defined, and it inherits array-like operations and methods from `DelayedArray`, e.g., the subsetting method of `[`.
+
+## Available GDS nodes
+
+`gdsNodes()` is an exported function. It takes the GDS file path as input, and returns all nodes that can be converted to `GDSArray` instances. The returned GDS node names can be used as input for the `GDSArray()` constructor.
 
 ```{r, gdsNodes}
 file <- SeqArray::seqExampleFileName("gds")
 gdsNodes(file)
 ```
 
-## GDSArraySeed
-
-The `GDSArraySeed` is the seed for the `GDSArray` object, which is not exported from this package. Seed objects should contain the GDS file path, and are expected to satisfy the “seed contract” i.e. to support dim() and dimnames().
-
-```{r, GDSArraySeed}
-seed <- GDSArray:::GDSArraySeed(file, "genotype/data")
-seed
-```
-
 ## GDSArray, GDSMatrix, and DelayedArray
 
-The `GDSArray` constructor over a single argument of `GDSArraySeed` will return the `GDSArray` object directly. Or it could take the arguments of filepath, and the GDS node inside the GDS file. The following 2 lines of code returns the same `GDSArray` object.  
-One thing to note, the `GDSArray` constructor always return the object with rows being "genes / variants / snps" and the columns being "samples", which is consistent with the assay data inside `SummarizedExperiment`. 
+The `GDSArray()` constructor takes as arguments the file path and the GDS node inside the GDS file. The `GDSArray()` constructor always returns the object with rows being "genes / variants / snps" and the columns being "samples". This is consistent with the assay data inside `SummarizedExperiment`.
 
 ```{r, GDSArray}
-GDSArray(seed)
 GDSArray(file, "genotype/data")
 ```
-The `GDSMatrix` is the 2-dimensional `GDSArray`, and will be returned from the `GDSArray` constructor automatically if the input GDS node is 2-dimensional. 
+A `GDSMatrix` is a 2-dimensional `GDSArray`, and will be returned from the `GDSArray()` constructor automatically if the input GDS node is 2-dimensional.
 
 ```{r, GDSMatrix}
 GDSArray(file, "phase/data")
 ```
 
-The `DelayedArray` constructor over `GDSArraySeed` object will return the same content as `GDSArray` constructor over the same `GDSArraySeed`. 
-
-```{r, da}
-class(DelayedArray(seed))
-``` 
-
 ## `GDSArray` methods
 
-### dim, dimnames
-The `dimnames(GDSArray)` returns an unnamed list, with the length of each element to be the same as return from `dim(GDSArray)`. 
+### `dim()`, `dimnames()`
+
+The `dimnames(GDSArray)` returns an unnamed list, with the length of each element to be the same as return from `dim(GDSArray)`.
+
 ```{r, dims}
 ga <- GDSArray(file, "phase/data")
 dim(ga)
@@ -105,13 +100,36 @@ lengths(dimnames(ga))
 
 ### `[` subsetting
 
+`GDSArray` instances can be subset, following the usual _R_ conventions, with numeric or logical vectors; logical vectors are recycled to the appropriate length.
+
 ```{r, methods}
 ga[1:3, 10:15]
-ga[c(rep(c(TRUE, FALSE), 4), rep(FALSE, nrow(ga)-8)), ]
+ga[c(TRUE, FALSE), ]
+```
+
+## Internals: `GDSArraySeed`
+
+The `GDSArraySeed` class represents the 'seed' for the `GDSArray` object. It is not exported from the [GDSArray][] package. Seed objects should contain the GDS file path, and are expected to satisfy the “seed contract” i.e. to support dim() and dimnames().
+
+```{r, GDSArraySeed}
+seed <- GDSArray:::GDSArraySeed(file, "genotype/data")
+seed
+```
+
+The seed can be used to construct a `GDSArray` instance.
+
+```{r, GDSArray-from-GDSArraySeed}
+GDSArray(seed)
+```
+
+The `DelayedArray()` constructor with `GDSArraySeed` object as argument will return the same content as the `GDSArray()` constructor over the same `GDSArraySeed`.
+
+```{r, da}
+class(DelayedArray(seed))
 ```
 
 # sessionInfo
+
 ```{r, sessionInfo}
 sessionInfo()
 ```
-
