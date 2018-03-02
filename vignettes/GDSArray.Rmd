@@ -26,7 +26,7 @@ options(showTailLines=3)
 
 # Introduction
 
-[GDSArray][] is a _Bioconductor_ package that represents GDS files as objects derived from the [DelayedArray][] package and `DelayedArray` class. It converts a GDS node in the file to a `DelayedArray`-derived data structure. The rich common methods and data operations defined on `GDSArray` makes it more _R_-user-friendly than working with the GDS file directly. The array data from GDS files are always returned with the first dimension being `variants/snps` and the second dimension being `samples`. This feature is consistent with the array data saved in `SummarizedExperiment`, and makes the `GDSArray` package interoperable with other established _Bioconductor_ data infrastructure.
+[GDSArray][] is a _Bioconductor_ package that represents GDS files as objects derived from the [DelayedArray][] package and `DelayedArray` class. It converts a GDS node in the file to a `DelayedArray`-derived data structure. The rich common methods and data operations defined on `GDSArray` makes it more _R_-user-friendly than working with the GDS file directly. The array data from GDS files are always returned with the first dimension being `variants/snps` and the second dimension being `samples`. This feature is consistent with the assay data saved in `SummarizedExperiment`, and makes the `GDSArray` package interoperable with other established _Bioconductor_ data infrastructure.
 
 [GDSArray]: https://bioconductor.org/packages/GDSArray
 [DelayedArray]: https://bioconductor.org/packages/DelayedArray
@@ -105,6 +105,16 @@ lengths(dimnames(ga))
 ```{r, methods}
 ga[1:3, 10:15]
 ga[c(TRUE, FALSE), ]
+```
+
+### some numeric calculation
+
+```{r, numeric}
+dp <- GDSArray(file, "annotation/format/DP/data")
+dp
+log(dp)
+
+dp[rowMeans(dp) < 60, ]
 ```
 
 ## Internals: `GDSArraySeed`

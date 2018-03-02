@@ -44,11 +44,13 @@ setMethod(
     } else {
         f <- openfn.gds(x@file)
         on.exit(closefn.gds(f))
-        if(x@permute){
+        if (x@permute) {
             permdim <- rev(seq_len(length(index)))
             index <- index[permdim] ## multi-dimensional supported
-            ans <- aperm(readex.gdsn(index.gdsn(f, x@name), index), permdim)
-            ## same: ans <- aperm(readex.gdsn(index.gdsn(f, x@name), index))
+            dat <- readex.gdsn(index.gdsn(f, x@name), index)
+            if (!is(dat, "array"))   ## dat must be an array
+                dat <- array(dat, dim=ans_dim[permdim])
+            ans <- aperm(dat)
         } else {
             ans <- readex.gdsn(index.gdsn(f, x@name), index)
         }
