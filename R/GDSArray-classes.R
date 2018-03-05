@@ -1,10 +1,11 @@
 ### -----------------------------------------------------
 ### GDSArraySeed class 
 ###
-setClass("GDSArraySeed",
-         contains = "Array", ## from DelayedArray: A virtual class with no slots
-                             ## to be extended by concrete subclasses with
-                             ## an array-like semantic.
+setClass(
+    "GDSArraySeed",
+    contains = "Array", ## from DelayedArray: A virtual class with no slots
+                        ## to be extended by concrete subclasses with
+                        ## an array-like semantic.
     slots = c(
         file="character",   # Absolute path to the gds file so the object
                             # doesn't break when the user changes the working
@@ -85,8 +86,9 @@ setMethod("extract_array", "GDSArraySeed", .extract_array_from_GDSArraySeed)
 GDSArraySeed <- function(file, name=NA)
 {
     if (!isSingleString(file))
-        stop(wmsg("'file' must be a single string specifying the path to ",
-                  "the gds file where the dataset is located."))
+        stop(wmsg(
+            "'file' must be a single string specifying the path to ",
+            "the gds file where the dataset is located."))
     if (!isSingleStringOrNA(name))
         stop("'type' must be a single string or NA")
     file <- file_path_as_absolute(file)
@@ -95,7 +97,9 @@ GDSArraySeed <- function(file, name=NA)
     dimnames <- .get_gdsdata_dimnames(file, node = name)
 
     if (!identical(lengths(dimnames, use.names=FALSE), dims)) {
-        stop(wmsg("the lengths of dimnames is not consistent with data dimensions."))
+        stop(wmsg(
+            "the lengths of dimnames",
+            "is not consistent with data dimensions."))
     }
 
     first_val <- .read_gdsdata_first_val(file, node = name)
@@ -109,13 +113,14 @@ GDSArraySeed <- function(file, name=NA)
         dims <- rev(dims)
         dimnames <- dimnames[rev(seq_len(length(dimnames)))]
     }
-    new2("GDSArraySeed", file=file,
-         name=name,
-         dim=dims,
-         dimnames = dimnames,
-         permute = permute,
-         first_val = first_val
-         )
+    new2(
+        "GDSArraySeed", file=file,
+        name=name,
+        dim=dims,
+        dimnames = dimnames,
+        permute = permute,
+        first_val = first_val
+    )
 }
 
 
@@ -139,6 +144,7 @@ GDSArraySeed <- function(file, name=NA)
 #' @param name the gds array node to be read into GDSArraySeed / GDSArray. For
 #'     \code{GDSArray}, the default value for \code{name} is the
 #'     genotype data.
+#' @return \code{GDSArray} class object.
 #' @rdname GDSArray-classes
 setClass("GDSArray", contains="DelayedArray")
 
@@ -163,8 +169,9 @@ setMethod("matrixClass", "GDSArray", function(x) "GDSMatrix")
 
 setAs("GDSArray", "GDSMatrix", function(from) new("GDSMatrix", from))    
 setAs("GDSMatrix", "GDSArray", function(from) from)
-setAs("ANY", "GDSMatrix",
-      function(from) as(as(from, "GDSArray"), "GDSMatrix"))
+setAs(
+    "ANY", "GDSMatrix",
+    function(from) as(as(from, "GDSArray"), "GDSMatrix"))
 
 .validate_GDSArray <- function(x)
 {
@@ -181,9 +188,10 @@ setValidity2("GDSArray", .validate_GDSArray)
 ### Constructor
 ###
 
-setMethod("DelayedArray", "GDSArraySeed",
-          function(seed) DelayedArray:::new_DelayedArray(seed, Class="GDSArray")
-          )
+setMethod(
+    "DelayedArray", "GDSArraySeed",
+    function(seed) DelayedArray:::new_DelayedArray(seed, Class="GDSArray")
+)
 
 #' @description \code{GDSArray}: The function to convert a gds file
 #'     into the GDSArray data structure.
@@ -215,8 +223,9 @@ GDSArray <- function(file, name=NA, index=c("list", "IndexList"))
 {
     if (is(file, "GDSArraySeed")) {
         if (!(missing(name) && missing(index)))
-            stop(wmsg("GDSArray() must be called with a single argument ",
-                      "when passed an GDSArraySeed object"))
+            stop(wmsg(
+                "GDSArray() must be called with a single argument ",
+                "when passed an GDSArraySeed object"))
         seed <- file
         ## if (is(file, "GDSArraySeed")) {
         ##     seed <- file

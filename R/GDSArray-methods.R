@@ -3,6 +3,7 @@
 #' 
 #' @description \code{dim}, \code{dimnames}: dimension and dimnames of
 #'     object contained in the GDS file.
+#' @return the integer vector of \code{GDSArray} dimensions.
 #' @rdname GDSArray-methods
 #' @exportMethod dim
 #' @examples
@@ -14,12 +15,14 @@ setMethod("dim", "GDSArraySeed", function(x) x@dim)
 
 #' @rdname GDSArray-methods
 #' @exportMethod dimnames
+#' @return the unnamed list of dimension names for \code{GDSArray} object.
 setMethod("dimnames", "GDSArraySeed", function(x) x@dimnames)
 
 #' @description \code{gdsfile}: on-disk location of GDS file
 #'     represented by this object.
 #' @param x GDSArray, GDSMatrix, GDSArraySeed or SummarizedExperiment
 #'     object.
+#' @return the character string for the gds file path.
 #' @rdname GDSArray-methods
 setGeneric("gdsfile", function(x) standardGeneric("gdsfile"))
 
@@ -34,12 +37,14 @@ setMethod("gdsfile", "GDSArray", function(x) gdsfile(seed(x)))
 setMethod("gdsfile", "DelayedArray", function(x) gdsfile(seed(x)))
 
 #' "gdsfile<-"
-#' @description \code{gdsfile<-}: the setter of the gds file path for `GDSArraySeed` and `GDSArray`.
+#' @description \code{gdsfile<-}: the setter of the gds file path for
+#'     `GDSArraySeed` and `GDSArray`.
 #' @param value gds file path.
 #' @rdname GDSArray-methods
-setGeneric("gdsfile<-",
-           function(x, value) standardGeneric("gdsfile<-"),
-           signature="x")
+setGeneric(
+    "gdsfile<-",
+    function(x, value) standardGeneric("gdsfile<-"),
+    signature="x")
 
 #' @rdname GDSArray-methods
 #' @exportMethod "gdsfile<-"

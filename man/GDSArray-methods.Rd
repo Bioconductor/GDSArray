@@ -37,6 +37,13 @@ object.}
 
 \item{value}{gds file path.}
 }
+\value{
+the integer vector of \code{GDSArray} dimensions.
+
+the unnamed list of dimension names for \code{GDSArray} object.
+
+the character string for the gds file path.
+}
 \description{
 \code{dim}, \code{dimnames}: dimension and dimnames of
     object contained in the GDS file.
@@ -44,7 +51,8 @@ object.}
 \code{gdsfile}: on-disk location of GDS file
     represented by this object.
 
-\code{gdsfile<-}: the setter of the gds file path for `GDSArraySeed` and `GDSArray`.
+\code{gdsfile<-}: the setter of the gds file path for
+    `GDSArraySeed` and `GDSArray`.
 }
 \examples{
 file <- SNPRelate::snpgdsExampleFileName()

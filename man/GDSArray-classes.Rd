@@ -35,6 +35,9 @@ performance.}
 \code{GDSArray}, the default value for \code{name} is the
 genotype data.}
 }
+\value{
+\code{GDSArray} class object.
+}
 \description{
 GDSArray constructor and coercion methods.
 
