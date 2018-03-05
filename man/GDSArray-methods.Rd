@@ -46,3 +46,9 @@ object.}
 
 \code{gdsfile<-}: the setter of the gds file path for `GDSArraySeed` and `GDSArray`.
 }
+\examples{
+file <- SNPRelate::snpgdsExampleFileName()
+ga <- GDSArray(file, "sample.annot/pop.group")
+dim(ga)
+dimnames(ga)
+}

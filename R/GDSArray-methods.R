@@ -5,7 +5,11 @@
 #'     object contained in the GDS file.
 #' @rdname GDSArray-methods
 #' @exportMethod dim
-#' 
+#' @examples
+#' file <- SNPRelate::snpgdsExampleFileName()
+#' ga <- GDSArray(file, "sample.annot/pop.group")
+#' dim(ga)
+#' dimnames(ga)
 setMethod("dim", "GDSArraySeed", function(x) x@dim)
 
 #' @rdname GDSArray-methods

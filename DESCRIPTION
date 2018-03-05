@@ -1,9 +1,9 @@
 Package: GDSArray
 Title: Representing GDS files as array-like objects
-Version: 0.99.0
+Version: 0.99.2
 Authors@R: c(
     person(
-        "Qian", "Liu", email = "Qian.Liu@RoswellPark.org", role=c("aut", "cre")
+        "Qian", "Liu", email = "Qian.Liu@roswellpark.org", role=c("aut", "cre")
     ),
     person("Martin", "Morgan", role = "ctb"),
     person("Hervé",  "Pagès", role = "ctb"))
@@ -13,6 +13,8 @@ Description: GDS files are widely used to represent genotyping or
     representation that allows easy manipulation (e.g., subsetting,
     mathematical transformation) in _R_. The data remains on disk
     until needed, so that very large files can be processed.
+biocViews: Infrastructure, DataRepresentation, Sequencing, Coverage,
+    Annotation, GenomeAnnotation
 Depends:
     R (>= 3.5),
     gdsfmt,
