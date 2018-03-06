@@ -60,15 +60,20 @@ setMethod(
 }
 
 #' GDSArray constructor and coercion methods.
+#'
 #' @name extract_array
 #' @exportMethod extract_array
+#' @description \code{extract_array}: the function to extract data from
+#'     a \code{GDS} file, by taking \code{GDSArraySeed} as input. This
+#'     function is required by the \code{DelayedArray} for the seed
+#'     contract.
 #' @param x the GDSArraySeed object
-## #' @param index An unnamed list of subscripts as positive integer
-## #'     vectors, one vector per dimension in \code{x}. Empty and
-## #'     missing subscripts (represented by \code{integer(0)} and
-## #'     \code{NULL} list elements, respectively) are allowed. The
-## #'     subscripts can contain duplicated indices. They cannot contain
-## #'     NAs or non-positive values.
+#' @param index An unnamed list of subscripts as positive integer
+#'     vectors, one vector per dimension in \code{x}. Empty and
+#'     missing subscripts (represented by \code{integer(0)} and
+#'     \code{NULL} list elements, respectively) are allowed. The
+#'     subscripts can contain duplicated indices. They cannot contain
+#'     NAs or non-positive values.
 #' @aliases extract_array,GDSArraySeed-method
 #' @rdname GDSArray-classes
 setMethod("extract_array", "GDSArraySeed", .extract_array_from_GDSArraySeed)
@@ -195,11 +200,6 @@ setMethod(
 
 #' @description \code{GDSArray}: The function to convert a gds file
 #'     into the GDSArray data structure.
-#' @param index the class of the index slot of the
-#'     GDSArray. \code{IndexList} is a reference class list defined in
-#'     package \code{DelayedArray}, in order to have different
-#'     GDSArrays to share the index slot, for a uniform subsetting
-#'     performance.
 #' @export
 #' @aliases GDSArray-method
 #' @rdname GDSArray-classes
@@ -219,10 +219,10 @@ setMethod(
 #' GDSArray(file1, "annotation/format/DP/data")
 #' GDSArray(file1, "annotation/info/DP")
 
-GDSArray <- function(file, name=NA, index=c("list", "IndexList"))
+GDSArray <- function(file, name=NA)
 {
     if (is(file, "GDSArraySeed")) {
-        if (!(missing(name) && missing(index)))
+        if (!missing(name))
             stop(wmsg(
                 "GDSArray() must be called with a single argument ",
                 "when passed an GDSArraySeed object"))

@@ -18,16 +18,17 @@
 \usage{
 \S4method{extract_array}{GDSArraySeed}(x, index)
 
-GDSArray(file, name = NA, index = c("list", "IndexList"))
+GDSArray(file, name = NA)
 }
 \arguments{
 \item{x}{the GDSArraySeed object}
 
-\item{index}{the class of the index slot of the
-GDSArray. \code{IndexList} is a reference class list defined in
-package \code{DelayedArray}, in order to have different
-GDSArrays to share the index slot, for a uniform subsetting
-performance.}
+\item{index}{An unnamed list of subscripts as positive integer
+vectors, one vector per dimension in \code{x}. Empty and
+missing subscripts (represented by \code{integer(0)} and
+\code{NULL} list elements, respectively) are allowed. The
+subscripts can contain duplicated indices. They cannot contain
+NAs or non-positive values.}
 
 \item{file}{the gds file name.}
 
@@ -39,7 +40,10 @@ genotype data.}
 \code{GDSArray} class object.
 }
 \description{
-GDSArray constructor and coercion methods.
+\code{extract_array}: the function to extract data from
+    a \code{GDS} file, by taking \code{GDSArraySeed} as input. This
+    function is required by the \code{DelayedArray} for the seed
+    contract.
 
 \code{GDSArray}: The function to convert a gds file
     into the GDSArray data structure.
