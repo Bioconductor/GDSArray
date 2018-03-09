@@ -58,5 +58,6 @@ setReplaceMethod( "gdsfile", "GDSArraySeed", function(x, value) {
 #' @exportMethod "gdsfile<-"
 setReplaceMethod("gdsfile", "GDSArray", function(x, value) {
     new_filepath <- tools::file_path_as_absolute(value)
-    BiocGenerics:::replaceSlots(seed(x), file=value, check=FALSE)
+    x@seed <- BiocGenerics:::replaceSlots(seed(x), file=value, check=FALSE)
+    x
 })
