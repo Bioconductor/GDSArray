@@ -1,0 +1,8 @@
+3/13/2018
+
+- RSamtools, filepath, show, width. --- to do. 
+- gdsNodes as method for GDSlight / GDS file path. 
+- accessors for GDSlight. gdsfile(), ?current_path...
+- GDSArray constructor, remove GDSlight input. 
+- $ check if exist, fail if not. 
+- update vignette. 

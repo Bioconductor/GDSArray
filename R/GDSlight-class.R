@@ -7,10 +7,24 @@ setClass(
     )
 )
 
+setMethod("show", "GDSlight", function(object) {
+    nodes <- gdsNodes(object@file)
+    nodes <- nodes[startsWith(nodes, object@current_path)]
+    cat(
+        "class: ", class(object), "\n",
+        "file: ", object@file, "\n",
+        "current node: ", object@current_path, "\n",
+        "subnodes:\n  ", paste(nodes, collapse="\n  "), "\n",
+        sep = ""
+    )
+})
+
 #' GDSlight constructor and methods. 
 #' 
 #' @name GDSlight
-#' @description GDSlight is a light-weight class to represent a GDS file. It has the \code{$} method defined as a convenient input for \code{GDSArray} constructor.
+#' @description GDSlight is a light-weight class to represent a GDS
+#'     file. It has the \code{$} method defined as a convenient input
+#'     for \code{GDSArray} constructor.
 #' @export
 #' @rdname GDSlight-class
 #' @aliases GDSlight-constructor
@@ -20,11 +34,10 @@ GDSlight <- function(file, current_path="")
 }
 
 .DollarNames.GDSlight <- function(x, pattern = "") {
-    if (nzchar(x@current_path)) 
-        pattern <- paste(x@current_path, pattern, sep="/")
-    pattern <- sprintf("^(%s[^/]+).*", pattern)
-    g <- sub(pattern, "\\1", grep(pattern, gdsNodes(x@file), value=TRUE))
-    sub(".*/", "", g)
+    nodes <- gdsNodes(x@file)
+    nodes <- nodes[startsWith(nodes, x@current_path)]
+    completions <- sub(sprintf("^%s/", x@current_path), "", nodes)
+    sub("/.*", "", completions)
 }
 
 #' @exportMethod $
@@ -36,6 +49,10 @@ setMethod("$", "GDSlight", function(x, name)
 {
     if (nzchar(x@current_path)) 
         name <- paste(x@current_path, name, sep="/")
-    x@current_path = name
-    x
+    x@current_path <- name
+    ## check if exist
+    if (x@current_path %in% gdsNodes(x@file))
+        GDSArray(x)
+    else
+        x
 })
