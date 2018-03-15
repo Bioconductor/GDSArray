@@ -38,7 +38,7 @@ gdsfile(x) <- value
 \S4method{gdsfile}{GDSArray}(x) <- value
 }
 \arguments{
-\item{x}{GDSArray, GDSMatrix, GDSArraySeed or SummarizedExperiment
+\item{x}{GDSArray, GDSMatrix, GDSArraySeed, GDSFile or SummarizedExperiment
 object.}
 
 \item{value}{the new \code{GDSArraySeed} for the \code{GDSArray} object.}

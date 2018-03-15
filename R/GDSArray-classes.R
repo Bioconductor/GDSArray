@@ -227,24 +227,6 @@ GDSArray <- function(file, name=NA)
                 "GDSArray() must be called with a single argument ",
                 "when passed an GDSArraySeed object"))
         seed <- file
-    } else if (is(file, "GDSlight")) {
-        if (!missing(name)) {
-            if (nzchar(file@current_path)) {
-                file@current_path <- paste(file@current_path, name, sep="/")
-            } else {
-                file@current_path <- name
-            }
-        }
-        m <- grep(file@current_path, gdsNodes(file@file))
-        if (length(m) == 1 &&  ## complete path
-            identical(file@current_path, gdsNodes(file@file)[m])) {
-            seed <- GDSArraySeed(file@file, file@current_path)
-        } else {
-            stop(wmsg("the 'current_path' in GDSlight object is ",
-                      "wrong or imcomplete. \n",
-                      "Please use 'gdsNodes(file@file)'",
-                      "for all available gds nodes. \n"))
-        }
     } else {
         ff <- .get_gdsdata_fileFormat(file)
         if (ff == "SNP_ARRAY") {

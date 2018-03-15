@@ -15,5 +15,8 @@ test_that("GDSArray constructor works", {
     expect_s4_class(gds, "GDSArray")
     expect_true(validObject(gds))
     expect_equal(dim(gds), c(9088L, 279L))
+    seed <- seed(gds)
+    expect_s4_class(seed, "GDSArraySeed")
+    expect_true(validObject(seed))
 })
 

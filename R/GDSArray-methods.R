@@ -40,11 +40,11 @@ setReplaceMethod("seed", "GDSArray", function(x, value) {
 
 #' @description \code{gdsfile}: on-disk location of GDS file
 #'     represented by this object.
-#' @param x GDSArray, GDSMatrix, GDSArraySeed or SummarizedExperiment
+#' @param x GDSArray, GDSMatrix, GDSArraySeed, GDSFile or SummarizedExperiment
 #'     object.
 #' @return \code{gdsfile}: the character string for the gds file path.
 #' @rdname GDSArray-methods
-setGeneric("gdsfile", function(x) standardGeneric("gdsfile"))
+setGeneric("gdsfile", function(x) standardGeneric("gdsfile"), signature="x")
 
 #' @rdname GDSArray-methods
 #' @exportMethod gdsfile
@@ -55,6 +55,10 @@ setMethod("gdsfile", "GDSArray", function(x) gdsfile(seed(x)))
 
 #' @rdname GDSArray-methods
 setMethod("gdsfile", "DelayedArray", function(x) gdsfile(seed(x)))
+
+## #' @rdname GDSArray-methods
+## #' @aliases GDSFile-method
+## setMethod("gdsfile", "GDSFile", function(x) x@file)
 
 #' "gdsfile<-"
 #' @description \code{gdsfile<-}: the setter of the gds file path for

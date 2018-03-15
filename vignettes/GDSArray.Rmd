@@ -80,34 +80,23 @@ More details about GDS format can be found in the vignettes of the
 [SNPRelate]: https://bioconductor.org/packages/SNPRelate
 [SeqArray]: https://bioconductor.org/packages/SeqArray
 
-# `GDSArray`, `GDSMatrix`
+# `GDSArray`, `GDSMatrix`, and `GDSFile`
 
 `GDSArray` represents GDS files as `DelayedArray` instances. It has
 methods like `dim`, `dimnames` defined, and it inherits array-like
 operations and methods from `DelayedArray`, e.g., the subsetting
 method of `[`.
 
-## Available GDS nodes
-
-`gdsNodes()` is an exported function. It takes the GDS file path as
-input, and returns all nodes that can be converted to `GDSArray`
-instances. The returned GDS node names can be used as input for the
-`GDSArray()` constructor.
-
-```{r, gdsNodes}
-file <- SeqArray::seqExampleFileName("gds")
-gdsNodes(file)
-```
-
 ## GDSArray, GDSMatrix, and DelayedArray
 
 The `GDSArray()` constructor takes as arguments the file path and the
 GDS node inside the GDS file. The `GDSArray()` constructor always
-returns the object with rows being "genes / variants / snps" and the
-columns being "samples". This is consistent with the assay data inside
-`SummarizedExperiment`.
+returns the object with rows being features (genes / variants / snps)
+and the columns being "samples". This is consistent with the assay
+data inside `SummarizedExperiment`.
 
 ```{r, GDSArray}
+file <- SeqArray::seqExampleFileName("gds")
 GDSArray(file, "genotype/data")
 ```
 A `GDSMatrix` is a 2-dimensional `GDSArray`, and will be returned from
@@ -118,7 +107,48 @@ the `GDSArray()` constructor automatically if the input GDS node is
 GDSArray(file, "phase/data")
 ```
 
+## `GDSFile` 
+
+The `GDSFile` is a light-weight class of representing GDS files. It
+has the `$` completion method to complete any possible gds nodes. It
+could be used as a convenient `GDSArray` constructor if the slot of
+`current_path` in `GDSFile` object represent a valid gds
+node. Otherwise, it will return the `GDSFile` object with an updated `current_path`.  
+
+```{r, GDSFile}
+gf <- GDSFile(file)
+gf$annotation$info
+gf$annotation$info$AC
+```
+
+Try type in `gf$ann` and press `tab` key for the completion.  
+
 ## `GDSArray` methods
+
+### slot accessors. 
+- `seed` returns the `GDSArraySeed` of the `GDSArray` object.
+```{r, seedAccessor}
+ga <- GDSArray(file, "genotype/data")
+seed(ga)
+```
+
+- `gdsfile` returns the file path of the corresponding GDS file. 
+```{r, gdsfileAccessor}
+gdsfile(ga)
+```
+
+### Available GDS nodes
+
+`gdsNodes()` takes the GDS file path or `GDSFile` object as input, and
+returns all nodes that can be converted to `GDSArray` instances. The
+returned GDS node names can be used as input for the `GDSArray(name=)`
+constructor.
+
+```{r, gdsNodes}
+gdsNodes(file)
+identical(gdsNodes(file), gdsNodes(gf))
+GDSArray(file, name=gdsNodes(file)[2])
+```
 
 ### `dim()`, `dimnames()`
 

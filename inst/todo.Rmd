@@ -1,8 +1,9 @@
 3/13/2018
 
-- RSamtools, filepath, show, width. --- to do. 
-- gdsNodes as method for GDSlight / GDS file path. 
-- accessors for GDSlight. gdsfile(), ?current_path...
-- GDSArray constructor, remove GDSlight input. 
-- $ check if exist, fail if not. 
-- update vignette. 
+- RSamtools, filepath, show, width. --- to do...
+
+- gdsNodes as method for GDSlight / GDS file path.   -- done!
+- accessors for GDSFile. gdsfile(), not for "current_path" -- done. 
+- GDSArray constructor, remove GDSlight input. -- done! 
+- $ check if exist, fail if not.   -- done!
+- update vignette. -- done!

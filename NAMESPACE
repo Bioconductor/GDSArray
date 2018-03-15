@@ -2,8 +2,8 @@
 
 export(GDSArray)
 export(GDSFile)
-export(gdsNodes)
 exportClasses(GDSArray)
+exportClasses(GDSFile)
 exportClasses(GDSMatrix)
 exportMethods("$")
 exportMethods("gdsfile<-")
