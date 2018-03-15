@@ -3,7 +3,7 @@
 #' 
 #' @description \code{dim}, \code{dimnames}: dimension and dimnames of
 #'     object contained in the GDS file.
-#' @return the integer vector of \code{GDSArray} dimensions.
+#' @return \code{dim}: the integer vector of \code{GDSArray} dimensions.
 #' @rdname GDSArray-methods
 #' @exportMethod dim
 #' @examples
@@ -15,14 +15,34 @@ setMethod("dim", "GDSArraySeed", function(x) x@dim)
 
 #' @rdname GDSArray-methods
 #' @exportMethod dimnames
-#' @return the unnamed list of dimension names for \code{GDSArray} object.
+#' @return \code{dimnames}: the unnamed list of dimension names for \code{GDSArray} object.
 setMethod("dimnames", "GDSArraySeed", function(x) x@dimnames)
+
+## setGeneric("seed", function(x) standardGeneric("seed"))
+#' @rdname GDSArray-methods
+#' @exportMethod seed
+#' @description \code{seed}: the \code{GDSArraySeed} getter for \code{GDSArray} object.
+#' @return \code{seed}: the \code{GDSArraySeed} of \code{GDSArray} object.
+setMethod("seed", "GDSArray", function(x) x@seed)
+
+## setGeneric(
+##     "seed<-",
+##     function(x, value) standardGeneric("seed<-"),
+##     signature="x"
+## )
+#' @rdname GDSArray-methods
+#' @exportMethod "seed<-"
+#' @description \code{seed<-}: the \code{GDSArraySeed} setter for \code{GDSArray} object.
+#' @param value the new \code{GDSArraySeed} for the \code{GDSArray} object.
+setReplaceMethod("seed", "GDSArray", function(x, value) {
+    x@seed <- BiocGenerics:::replaceSlots(x, seed=value, check=FALSE)
+})
 
 #' @description \code{gdsfile}: on-disk location of GDS file
 #'     represented by this object.
 #' @param x GDSArray, GDSMatrix, GDSArraySeed or SummarizedExperiment
 #'     object.
-#' @return the character string for the gds file path.
+#' @return \code{gdsfile}: the character string for the gds file path.
 #' @rdname GDSArray-methods
 setGeneric("gdsfile", function(x) standardGeneric("gdsfile"))
 
@@ -39,7 +59,6 @@ setMethod("gdsfile", "DelayedArray", function(x) gdsfile(seed(x)))
 #' "gdsfile<-"
 #' @description \code{gdsfile<-}: the setter of the gds file path for
 #'     `GDSArraySeed` and `GDSArray`.
-#' @param value gds file path.
 #' @rdname GDSArray-methods
 setGeneric(
     "gdsfile<-",
@@ -58,5 +77,6 @@ setReplaceMethod( "gdsfile", "GDSArraySeed", function(x, value) {
 #' @exportMethod "gdsfile<-"
 setReplaceMethod("gdsfile", "GDSArray", function(x, value) {
     new_filepath <- tools::file_path_as_absolute(value)
-    BiocGenerics:::replaceSlots(seed(x), file=value, check=FALSE)
+    x@seed <- BiocGenerics:::replaceSlots(seed(x), file=value, check=FALSE)
+    x
 })
