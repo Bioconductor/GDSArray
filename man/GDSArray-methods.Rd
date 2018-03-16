@@ -38,17 +38,21 @@ gdsfile(x) <- value
 \S4method{gdsfile}{GDSArray}(x) <- value
 }
 \arguments{
-\item{x}{GDSArray, GDSMatrix, GDSArraySeed, GDSFile or SummarizedExperiment
-object.}
+\item{x}{GDSArray, GDSMatrix, GDSArraySeed, GDSFile or
+SummarizedExperiment object.}
 
-\item{value}{the new \code{GDSArraySeed} for the \code{GDSArray} object.}
+\item{value}{the new \code{GDSArraySeed} for the \code{GDSArray}
+object.}
 }
 \value{
-\code{dim}: the integer vector of \code{GDSArray} dimensions.
+\code{dim}: the integer vector of \code{GDSArray}
+    dimensions.
 
-\code{dimnames}: the unnamed list of dimension names for \code{GDSArray} object.
+\code{dimnames}: the unnamed list of dimension names for
+    \code{GDSArray} object.
 
-\code{seed}: the \code{GDSArraySeed} of \code{GDSArray} object.
+\code{seed}: the \code{GDSArraySeed} of \code{GDSArray}
+    object.
 
 \code{gdsfile}: the character string for the gds file path.
 }
@@ -56,9 +60,11 @@ object.}
 \code{dim}, \code{dimnames}: dimension and dimnames of
     object contained in the GDS file.
 
-\code{seed}: the \code{GDSArraySeed} getter for \code{GDSArray} object.
+\code{seed}: the \code{GDSArraySeed} getter for
+    \code{GDSArray} object.
 
-\code{seed<-}: the \code{GDSArraySeed} setter for \code{GDSArray} object.
+\code{seed<-}: the \code{GDSArraySeed} setter for
+    \code{GDSArray} object.
 
 \code{gdsfile}: on-disk location of GDS file
     represented by this object.

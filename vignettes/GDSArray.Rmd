@@ -2,21 +2,21 @@
 title: "GDSArray: Representing GDS files as array-like objects"
 author:
 - name: Qian Liu
-  affiliation: Roswell Park Comprehensive Cancer Center, Buffalo, NY
+    affiliation: Roswell Park Comprehensive Cancer Center, Buffalo, NY
 - name: Hervé Pagès
-  affiliation: Fred Hutchinson Cancer Research Center, Seattle, WA
+    affiliation: Fred Hutchinson Cancer Research Center, Seattle, WA
 - name: Martin Morgan
-  affiliation: Roswell Park Comprehensive Cancer Center, Buffalo, NY
+    affiliation: Roswell Park Comprehensive Cancer Center, Buffalo, NY
 date: "last edit: 3/1/2018"
 output:
-  BiocStyle::html_document:
-      toc: true
-      toc_float: true
+    BiocStyle::html_document:
+        toc: true
+        toc_float: true
 package: GDSArray
 vignette: |
-  %\VignetteIndexEntry{GDSArray: Representing GDS files as array-like objects}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+    %\VignetteIndexEntry{GDSArray: Representing GDS files as array-like objects}
+    %\VignetteEngine{knitr::rmarkdown}
+    %\VignetteEncoding{UTF-8}
 ---
 
 ```{r options, eval=TRUE, echo=FALSE}
@@ -112,8 +112,8 @@ GDSArray(file, "phase/data")
 The `GDSFile` is a light-weight class of representing GDS files. It
 has the `$` completion method to complete any possible gds nodes. It
 could be used as a convenient `GDSArray` constructor if the slot of
-`current_path` in `GDSFile` object represent a valid gds
-node. Otherwise, it will return the `GDSFile` object with an updated `current_path`.  
+`current_path` in `GDSFile` object represent a valid gds node. 
+Otherwise, it will return the `GDSFile` object with an updated `current_path`.  
 
 ```{r, GDSFile}
 gf <- GDSFile(file)

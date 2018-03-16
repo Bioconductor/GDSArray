@@ -117,9 +117,7 @@ setMethod("$", "GDSFile", function(x, name)
 
 #' @exportMethod gdsNodes
 
-setGeneric("gdsNodes",
-           function(x) standGeneric(x),
-           signature="x")
+setGeneric("gdsNodes", function(x) standGeneric(x), signature="x")
 
 #' @name gdsNodes
 #' @rdname GDSFile-class
