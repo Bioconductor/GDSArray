@@ -9,7 +9,7 @@
 ## array data with >1 dimensions to pass into assays(se)
 .get_gdsdata_arrayNodes <- function(file)
 {
-    names.gdsn <- gdsNodes(file)
+    names.gdsn <- gdsnodes(file)
     f <- openfn.gds(file)
     on.exit(closefn.gds(f))
     
@@ -21,7 +21,7 @@
     ## names(dims) <- all.gdsn
     names.gdsn[
         isarray & lengths(dims) > 1 & 
-        ! unlist(lapply(dims, function(x) any(x == 0L))) &
+        ! vapply(dims, function(x) any(x == 0L), logical(1)) &
         !grepl("~", names.gdsn)
         ## what's the pattern with genotype/~data, phase/~data,
         ## annotation/format/DP/~data
@@ -137,4 +137,12 @@
     first_val <- readex.gdsn(
         index.gdsn(f, node), sel=as.list(rep(1, length(dims))))
     first_val
+}
+
+
+example <- function(name="GDSArray")
+{
+    file <- SeqArray::seqExampleFileName("gds")
+    gds <- GDSArray(file, "annotation/format/DP/data")
+    gds
 }

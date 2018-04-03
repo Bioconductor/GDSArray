@@ -17,7 +17,7 @@ test_that("get gds all nodes, array nodes, and node dimension works", {
     
     file <- system.file(package="SeqArray", "extdata", "CEU_Exon.gds")
     ## allnodes
-    allnodes <- gdsNodes(file)
+    allnodes <- gdsnodes(file)
     expect_true(is(allnodes, "character"))
 
     ## arraynodes, dims

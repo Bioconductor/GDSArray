@@ -14,11 +14,15 @@
 \alias{coerce,ANY,GDSMatrix-method}
 \alias{GDSArray}
 \alias{GDSArray-method}
+\alias{example}
+\alias{GDSArray-data}
 \title{GDSArray constructor and coercion methods.}
 \usage{
 \S4method{extract_array}{GDSArraySeed}(x, index)
 
 GDSArray(file, name = NA)
+
+example(pkg = "GDSArray")
 }
 \arguments{
 \item{x}{the GDSArraySeed object}
@@ -47,20 +51,24 @@ genotype data.}
 
 \code{GDSArray}: The function to convert a gds file
     into the GDSArray data structure.
+
+\code{GDSArray} example data
 }
 \examples{
 file <- SNPRelate::snpgdsExampleFileName()
-allnodes <- gdsNodes(file)  ## print all available gds nodes in file.
+allnodes <- gdsnodes(file)  ## print all available gds nodes in file.
 allnodes
 GDSArray(file)
 GDSArray(file, "sample.annot/pop.group")
 
 file1 <- SeqArray::seqExampleFileName("gds")
-allnodes1 <- gdsNodes(file1)  ## print all available gds nodes in file1. 
+allnodes1 <- gdsnodes(file1)  ## print all available gds nodes in file1. 
 allnodes1
 GDSArray(file1)
 GDSArray(file1, "variant.id")
 GDSArray(file1, "sample.annotation/family")
 GDSArray(file1, "annotation/format/DP/data")
 GDSArray(file1, "annotation/info/DP")
+example("GDSArray")
+
 }

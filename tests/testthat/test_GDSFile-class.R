@@ -32,8 +32,8 @@ test_that("$ works", {
     expect_s4_class(gf$annotation$info$AC, "GDSArray")
 })
 
-test_that("gdsNodes works", {
+test_that("gdsnodes works", {
     file <- SeqArray::seqExampleFileName("gds")
     gf <- GDSFile(file)
-    expect_identical(gdsNodes(file), gdsNodes(gf))
+    expect_identical(gdsnodes(file), gdsnodes(gf))
 })

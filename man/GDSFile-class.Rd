@@ -12,10 +12,10 @@
 \alias{GDSFile,gdsfile-method}
 \alias{$,GDSFile-method}
 \alias{GDSFile-method}
-\alias{gdsNodes}
+\alias{gdsnodes}
 \alias{GDSFile-method}
-\alias{gdsNodes,ANY-method}
-\alias{gdsNodes,GDSFile-method}
+\alias{gdsnodes,ANY-method}
+\alias{gdsnodes,GDSFile-method}
 \title{GDSFile constructor and methods.}
 \usage{
 GDSFile(file, current_path = "")
@@ -26,7 +26,7 @@ GDSFile(file, current_path = "")
 
 \S4method{$}{GDSFile}(x, name)
 
-\S4method{gdsNodes}{ANY}(x)
+\S4method{gdsnodes}{ANY}(x)
 }
 \arguments{
 \item{file}{the GDS file path.}
@@ -46,7 +46,7 @@ GDSFile(file, current_path = "")
     \code{GDSArray} object if the \code{current_path} is a valid
     gds node.
 
-\code{gdsNodes}: a character vector for the available gds
+\code{gdsnodes}: a character vector for the available gds
     nodes.
 }
 \description{
@@ -57,21 +57,24 @@ GDSFile(file, current_path = "")
     the `GDSArray` of that node directly. Otherwise, it will return
     the `GDSFile` object with an updated `current_path`.
 
-the \code{GDSFile} constructor.
+\code{GDSFile}: the \code{GDSFile} class constructor.
 
-\code{gdsfile}: \code{file} slot getter and setter for
+\code{gdsfile}: \code{file} slot getter for
     \code{GDSFile} object.
 
-\code{gdsNodes}: to get the available gds nodes from
+\code{gdsfile<-}: \code{file} slot setter for
+    \code{GDSFile} object.
+
+\code{gdsnodes}: to get the available gds nodes from
     the \code{GDSFile} object or the file path with extension of
     ".gds".
 }
 \examples{
 file <- SNPRelate::snpgdsExampleFileName()
-gdsNodes(file)
+gdsnodes(file)
 file1 <- SeqArray::seqExampleFileName("gds")
-gdsNodes(file1)
+gdsnodes(file1)
 gf <- GDSFile(file)
-gdsNodes(gf)
+gdsnodes(gf)
 gdsfile(gf)
 }

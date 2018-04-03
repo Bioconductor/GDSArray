@@ -205,13 +205,13 @@ setMethod(
 #' @rdname GDSArray-classes
 #' @examples
 #' file <- SNPRelate::snpgdsExampleFileName()
-#' allnodes <- gdsNodes(file)  ## print all available gds nodes in file.
+#' allnodes <- gdsnodes(file)  ## print all available gds nodes in file.
 #' allnodes
 #' GDSArray(file)
 #' GDSArray(file, "sample.annot/pop.group")
 #'
 #' file1 <- SeqArray::seqExampleFileName("gds")
-#' allnodes1 <- gdsNodes(file1)  ## print all available gds nodes in file1. 
+#' allnodes1 <- gdsnodes(file1)  ## print all available gds nodes in file1. 
 #' allnodes1
 #' GDSArray(file1)
 #' GDSArray(file1, "variant.id")
@@ -239,3 +239,20 @@ GDSArray <- function(file, name=NA)
     DelayedArray(seed)   ## does the automatic coercion to GDSMatrix if 2-dim.
 }
 
+### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+### GDSArray example data
+###
+
+#' @description \code{GDSArray} example data
+#' @export
+#' @aliases GDSArray-data
+#' @rdname GDSArray-classes
+#' @examples
+#' example("GDSArray")
+#' 
+example <- function(pkg="GDSArray")
+{
+    file <- SeqArray::seqExampleFileName("gds")
+    gds <- GDSArray(file, "annotation/format/DP/data")
+    gds
+}

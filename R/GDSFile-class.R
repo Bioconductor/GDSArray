@@ -20,7 +20,7 @@ setClass(
 )
 
 setMethod("show", "GDSFile", function(object) {
-    nodes <- gdsNodes(object@file)
+    nodes <- gdsnodes(object@file)
     nodes <- nodes[startsWith(nodes, object@current_path)]
     cat(
         "class: ", class(object), "\n",
@@ -38,7 +38,7 @@ setMethod("show", "GDSFile", function(object) {
 #' GDSFile constructor and methods. 
 #' 
 #' @name GDSFile
-#' @description the \code{GDSFile} constructor.
+#' @description \code{GDSFile}: the \code{GDSFile} class constructor.
 #' @param file the GDS file path.
 #' @param current_path the current path to the closest gds node.
 #' @export
@@ -56,7 +56,7 @@ GDSFile <- function(file, current_path="")
 #' @exportMethod gdsfile
 #' @rdname GDSFile-class
 #' @aliases GDSFile-method
-#' @description \code{gdsfile}: \code{file} slot getter and setter for
+#' @description \code{gdsfile}: \code{file} slot getter for
 #'     \code{GDSFile} object.
 #' @return \code{gdsfile}: the file path of corresponding GDS file.
 
@@ -65,6 +65,8 @@ setMethod("gdsfile", "GDSFile", function(x) x@file)
 #' @exportMethod "gdsfile<-"
 #' @rdname GDSFile-class
 #' @aliases GDSFile-method GDSFile,gdsfile-method
+#' @description \code{gdsfile<-}: \code{file} slot setter for
+#'     \code{GDSFile} object.
 #' @param value the new gds file path
 setReplaceMethod("gdsfile", "GDSFile", function(x, value) {
     new_filepath <- tools::file_path_as_absolute(value)
@@ -76,7 +78,7 @@ setReplaceMethod("gdsfile", "GDSFile", function(x, value) {
 ###--------------------
 
 .DollarNames.GDSFile <- function(x, pattern = "") {
-    nodes <- gdsNodes(x@file)
+    nodes <- gdsnodes(x@file)
     nodes <- nodes[startsWith(nodes, x@current_path)]
     completions <- sub(sprintf("^%s/", x@current_path), "", nodes)
     sub("/.*", "", completions)
@@ -96,7 +98,7 @@ setMethod("$", "GDSFile", function(x, name)
         name <- paste(x@current_path, name, sep="/")
     }
     ## check if exist
-    nodes <- gdsNodes(x)
+    nodes <- gdsnodes(x)
     nodes <- nodes[startsWith(nodes, name)]
     pattern <- sprintf("(%s*)/.*$", name)
 
@@ -105,7 +107,7 @@ setMethod("$", "GDSFile", function(x, name)
     } else {
         stop(wmsg("the gds path of '", name, "' does not exist"))
     }
-    if (x@current_path %in% gdsNodes(x@file))
+    if (x@current_path %in% gdsnodes(x@file))
         GDSArray(gdsfile(x), x@current_path)
     else
         x
@@ -115,28 +117,28 @@ setMethod("$", "GDSFile", function(x, name)
 ### methods
 ###------------
 
-#' @exportMethod gdsNodes
+#' @exportMethod gdsnodes
 
-setGeneric("gdsNodes", function(x) standGeneric(x), signature="x")
+setGeneric("gdsnodes", function(x) standGeneric(x), signature="x")
 
-#' @name gdsNodes
+#' @name gdsnodes
 #' @rdname GDSFile-class
-#' @aliases GDSFile-method gdsNodes,ANY-method gdsNodes,GDSFile-method
-#' @description \code{gdsNodes}: to get the available gds nodes from
+#' @aliases GDSFile-method gdsnodes,ANY-method gdsnodes,GDSFile-method
+#' @description \code{gdsnodes}: to get the available gds nodes from
 #'     the \code{GDSFile} object or the file path with extension of
 #'     ".gds".
 #' @param x a \code{GDSFile} object or GDS file path.
-#' @return \code{gdsNodes}: a character vector for the available gds
+#' @return \code{gdsnodes}: a character vector for the available gds
 #'     nodes.
 #' @examples
 #' file <- SNPRelate::snpgdsExampleFileName()
-#' gdsNodes(file)
+#' gdsnodes(file)
 #' file1 <- SeqArray::seqExampleFileName("gds")
-#' gdsNodes(file1)
+#' gdsnodes(file1)
 #' gf <- GDSFile(file)
-#' gdsNodes(gf)
+#' gdsnodes(gf)
 #' gdsfile(gf)
-setMethod("gdsNodes", "ANY", function(x)
+setMethod("gdsnodes", "ANY", function(x)
 {
     f <- openfn.gds(x)
     on.exit(closefn.gds(f))
@@ -157,5 +159,5 @@ setMethod("gdsNodes", "ANY", function(x)
     names.gdsn
 })
 
-#' @exportMethod gdsNodes
-setMethod("gdsNodes", "GDSFile", function(x) gdsNodes(gdsfile(x)) )
+#' @exportMethod gdsnodes
+setMethod("gdsnodes", "GDSFile", function(x) gdsnodes(gdsfile(x)) )
