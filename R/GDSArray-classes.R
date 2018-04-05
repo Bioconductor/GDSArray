@@ -247,6 +247,7 @@ GDSArray <- function(file, name=NA)
 #' @export
 #' @aliases GDSArray-data
 #' @rdname GDSArray-classes
+#' @param pkg the package name, which is "GDSArray" by default. 
 #' @examples
 #' example("GDSArray")
 #' 

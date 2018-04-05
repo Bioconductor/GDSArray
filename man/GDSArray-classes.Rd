@@ -39,6 +39,8 @@ NAs or non-positive values.}
 \item{name}{the gds array node to be read into GDSArraySeed / GDSArray. For
 \code{GDSArray}, the default value for \code{name} is the
 genotype data.}
+
+\item{pkg}{the package name, which is "GDSArray" by default.}
 }
 \value{
 \code{GDSArray} class object.
