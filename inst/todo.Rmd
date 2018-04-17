@@ -1,3 +1,30 @@
+4/17/2018
+
+- "phase/extra", "genotype/extra", objdesp.gdsn()$dim==0, $type="Integer". 
+  - ".get\_gdsdata\_dim"
+  - ".get\_gdsdata\_first_val". if dim==0, then read type, and return type(0) (like integer(0), ...)
+  - "extract_array", accomodate index=NULL?
+> gf$description
+Error in readex.gdsn(index.gdsn(f, node), sel = as.list(rep(1, length(dims)))) : 
+  There is no data field.
+> gf$variant.id
+<1348> GDSArray object of type "integer":
+Error in dimnames(x) <- value : 'dimnames' applied to non-array
+gf$phase$~data
+Error: unexpected '~' in "gf$phase$~"
+> gf$phase$extra.index
+Error in GDSArraySeed(file, name) : 
+  the lengths of dimnamesis not consistent with data dimensions.
+> gf$phase$extra
+Error in readex.gdsn(index.gdsn(f, node), sel = as.list(rep(1, length(dims)))) : 
+  Invalid index in 'sel[[1]]'
+> gf$phase$extra   objdesp.gdsn(index.gdsn(f, "phase/extra"))$dim == 0
+Error in readex.gdsn(index.gdsn(f, node), sel = as.list(rep(1, length(dims)))) : 
+  Invalid index in 'sel[[1]]'
+> gf$genotype$data  -- correct!
+> gf$phase$data   -- correct!
+
+
 3/13/2018
 
 - RSamtools, filepath, show, width. --- to do...

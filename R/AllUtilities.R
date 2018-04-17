@@ -79,6 +79,32 @@
     dim
 }
 
+.get_gdsdata_type <- function(file, node)
+{
+    f <- openfn.gds(file)
+    on.exit(closefn.gds(f))
+    
+    type <- objdesp.gdsn(index.gdsn(f, node))$type
+    type_levels <- c("Label", "Folder", "VFolder", "Raw", "Integer",
+                "Factor", "Logical", "Real", "String", "Unknown")
+    if (!type %in% levels)
+        stop(
+            wmsg("The type of GDS nodes should be one of:\n",
+                 paste0(type_levels, collapse=", "))##)
+    if (!is.integer(dim)) {
+        if (any(dim > .Machine$integer.max)) {
+            dim_in1string <- paste0(dim, collapse=" x ")
+            stop(wmsg(
+                "The dimensions of GDS dataset '", file, "' are: ",
+                dim_in1string, "\n\nThe GDSArray package only ",
+                "supports datasets with all dimensions <= 2^31-1",
+                " (this is ", .Machine$integer.max, ") at the moment."))
+        }
+    }
+    dim <- as.integer(dim)
+    dim
+}
+
 .get_gdsdata_dimnames <- function(file, node)
 {
     ff <- .get_gdsdata_fileFormat(file)
@@ -132,6 +158,9 @@
 
 .read_gdsdata_first_val <- function(file, node){
     dims <- .get_gdsdata_dim(file, node)
+    if (identical(dims, 0L)) {
+        type <- 
+    }
     f <- openfn.gds(file)
     on.exit(closefn.gds(f))
     first_val <- readex.gdsn(
