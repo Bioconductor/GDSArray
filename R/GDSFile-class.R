@@ -127,9 +127,15 @@ setGeneric("gdsnodes", function(x) standGeneric(x), signature="x")
 #' @description \code{gdsnodes}: to get the available gds nodes from
 #'     the \code{GDSFile} object or the file path with extension of
 #'     ".gds".
-#' @param x a \code{GDSFile} object or GDS file path.
+#' @param x a \code{GDSFile} object. or GDS file path (for
+#'     \code{gdsnodes()}).
 #' @return \code{gdsnodes}: a character vector for the available gds
-#'     nodes.
+#'     nodes. When input is GDS file path, it returns all available
+#'     gds nodes within the GDS file, no matter there is value or
+#'     not. When input is \code{GDSFile} object, it returns only the
+#'     gds nodes that could construct \code{GDSArray} objects, which
+#'     means that the gds node has non-zero-dimensions, and is
+#'     actually array.
 #' @examples
 #' file <- SNPRelate::snpgdsExampleFileName()
 #' gdsnodes(file)
@@ -160,4 +166,15 @@ setMethod("gdsnodes", "ANY", function(x)
 })
 
 #' @exportMethod gdsnodes
-setMethod("gdsnodes", "GDSFile", function(x) gdsnodes(gdsfile(x)) )
+setMethod("gdsnodes", "GDSFile", function(x)
+{
+    nodes <- gdsnodes(gdsfile(x))
+    isarray <- vapply(nodes, function(node)
+        .get_gdsdata_isarray(gdsfile(x), node),
+        logical(1))
+    dims <- lapply(nodes, function(node)
+                   .get_gdsdata_dim(gdsfile(x), node))
+    isnull_dims <- vapply(dims, is.null, logical(1))
+    any_zero_dims <- vapply(dims, function(dim) any(dim == 0), logical(1)) 
+    nodes[isarray & !isnull_dims & !any_zero_dims]
+})

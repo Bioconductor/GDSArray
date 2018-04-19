@@ -101,13 +101,22 @@ GDSArraySeed <- function(file, name=NA)
     dims <- .get_gdsdata_dim(file, node = name)
     dimnames <- .get_gdsdata_dimnames(file, node = name)
 
+    if (is.null(dims)) {
+        type <- .get_gdsdata_type(file, name)
+        stop(wmsg("The gds node \"", name, "\" is type: ", type,
+                  ", which is not valid for constructing GDSArray"))
+    }
+    if(any (dims == 0L))
+        stop(wmsg("The dimension of gds node \"", name, "\" is: ",
+                  paste(dims, collapse=" x "),
+                  ",", "\n", "which could not construct GDSArray"))
     if (!identical(lengths(dimnames, use.names=FALSE), dims)) {
         stop(wmsg(
-            "the lengths of dimnames",
+            "the lengths of dimnames ",
             "is not consistent with data dimensions."))
     }
 
-    first_val <- .read_gdsdata_first_val(file, node = name)
+    first_val <- .get_gdsdata_first_val(file, node = name)
 
     if (length(dims) == 1)
         permute = FALSE

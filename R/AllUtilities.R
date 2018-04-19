@@ -6,19 +6,21 @@
     ff
 }
 
-## array data with >1 dimensions to pass into assays(se)
-.get_gdsdata_arrayNodes <- function(file)
+.get_gdsdata_isarray <- function(file, node)
 {
-    names.gdsn <- gdsnodes(file)
     f <- openfn.gds(file)
     on.exit(closefn.gds(f))
     
-    isarray <- vapply(names.gdsn, function(x) {
-        objdesp.gdsn(index.gdsn(f, x))$is.array
-    }, logical(1))
-    dims <- lapply(names.gdsn, function(x)
-        objdesp.gdsn(index.gdsn(f, x))$dim)
-    ## names(dims) <- all.gdsn
+    isarray <- objdesp.gdsn(index.gdsn(f, node))$is.array
+    return(isarray)
+}
+
+## array data with >1 dimensions to pass into assays(se)
+.get_gdsdata_non1D_array <- function(file)
+{
+    names.gdsn <- gdsnodes(file)
+    isarray <- vapply(names.gdsn, function(x) .get_gdsdata_isarray(file, x), logical(1))
+    dims <- lapply(names.gdsn, function(x) .get_gdsdata_dim(file, x))
     names.gdsn[
         isarray & lengths(dims) > 1 & 
         ! vapply(dims, function(x) any(x == 0L), logical(1)) &
@@ -65,6 +67,8 @@
     on.exit(closefn.gds(f))
     
     dim <- objdesp.gdsn(index.gdsn(f, node))$dim
+    if (is.null(dim))
+        return(NULL)
     if (!is.integer(dim)) {
         if (any(dim > .Machine$integer.max)) {
             dim_in1string <- paste0(dim, collapse=" x ")
@@ -86,23 +90,13 @@
     
     type <- objdesp.gdsn(index.gdsn(f, node))$type
     type_levels <- c("Label", "Folder", "VFolder", "Raw", "Integer",
-                "Factor", "Logical", "Real", "String", "Unknown")
-    if (!type %in% levels)
+                     "Factor", "Logical", "Real", "String", "Unknown")
+    if (!type %in% type_levels)
         stop(
             wmsg("The type of GDS nodes should be one of:\n",
-                 paste0(type_levels, collapse=", "))##)
-    if (!is.integer(dim)) {
-        if (any(dim > .Machine$integer.max)) {
-            dim_in1string <- paste0(dim, collapse=" x ")
-            stop(wmsg(
-                "The dimensions of GDS dataset '", file, "' are: ",
-                dim_in1string, "\n\nThe GDSArray package only ",
-                "supports datasets with all dimensions <= 2^31-1",
-                " (this is ", .Machine$integer.max, ") at the moment."))
-        }
-    }
-    dim <- as.integer(dim)
-    dim
+                 paste0(type_levels, collapse=", ")))
+    type <- as.character(type)
+    type
 }
 
 .get_gdsdata_dimnames <- function(file, node)
@@ -110,6 +104,9 @@
     ff <- .get_gdsdata_fileFormat(file)
     dims <- .get_gdsdata_dim(file, node)
 
+    if(is.null(dims) | any(dims == 0))
+        return(NULL)
+    
     if (ff == "SNP_ARRAY") {
         f <- openfn.gds(file)
         on.exit(closefn.gds(f))
@@ -156,11 +153,12 @@
 ## FIXME: if dimnames is shorter than the corresponding dimensions,
 ## use NULL to extend.??
 
-.read_gdsdata_first_val <- function(file, node){
+.get_gdsdata_first_val <- function(file, node)
+{
     dims <- .get_gdsdata_dim(file, node)
-    if (identical(dims, 0L)) {
-        type <- 
-    }
+
+    if (is.null(dims) | any(dims == 0L))
+        return(NULL)
     f <- openfn.gds(file)
     on.exit(closefn.gds(f))
     first_val <- readex.gdsn(

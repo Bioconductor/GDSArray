@@ -1,5 +1,31 @@
 4/17/2018
 
+- implement: ".get\_gdsdata\_isarray", extract objdesp.gdsn(f,name)$is.array   --done!
+- implement: ".get\_gdsdata\_non1D_array", extract >=2 dimensional array data
+  - implenentation. -- done!
+  - modify: (makeSEFromGDS:showAvailable()$name   -- todo...
+
+- modify: ".get\_gdsdata\_dim", 
+  - return NULL for non-array gds nodes. -- done!
+  - return objdesp$dim for all array gds nodes. (.get\_gdsdata\_isrray == TRUE) -- done!
+
+- modify: ".get\_gdsdata\_dimnames", check ".get\_gdsdata\_dim".  -- done!
+  - if is.null(dim), return NULL (for non-array gds nodes.) 
+  - if any(dim == 0), return NULL.
+
+- modify: ".read\_gdsdata\_first_val", check ".get\_gdsdata\_dim".  -- done!
+  - if is.null(dim), return NULL (for non-array data, e.g., Folder, VFolder...). 
+  - if any(dim == 0), return NULL (for 0-dim nodes, e.g., file, "phase/extra", "phase/extra.index", "genotype/extra"...) 
+
+- modify: "GDSArraySeed()" constructor. check ".get\_gdsdata\_dim".   -- done!
+  - if is.null(dim), wmsg("Not a valid gds node for constructing GDSArray")
+  - if any(dim == 0), wmsg("The dimension of gds node is: ", ", which cound not construct GDSArray")
+
+- modify "GDSFile$" method, return subnodes for gds folders? e.g., description???
+- "gdsnodes(file)", returns all nodes, including folder nodes. 
+  - only return gdsnodes that are not TRUE in ".get\_gdsdata\_isarray". 
+
+
 - "phase/extra", "genotype/extra", objdesp.gdsn()$dim==0, $type="Integer". 
   - ".get\_gdsdata\_dim"
   - ".get\_gdsdata\_first_val". if dim==0, then read type, and return type(0) (like integer(0), ...)
@@ -15,7 +41,7 @@ Error: unexpected '~' in "gf$phase$~"
 > gf$phase$extra.index
 Error in GDSArraySeed(file, name) : 
   the lengths of dimnamesis not consistent with data dimensions.
-> gf$phase$extra
+gf$phase$extra
 Error in readex.gdsn(index.gdsn(f, node), sel = as.list(rep(1, length(dims)))) : 
   Invalid index in 'sel[[1]]'
 > gf$phase$extra   objdesp.gdsn(index.gdsn(f, "phase/extra"))$dim == 0

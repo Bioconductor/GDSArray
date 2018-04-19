@@ -33,7 +33,8 @@ GDSFile(file, current_path = "")
 
 \item{current_path}{the current path to the closest gds node.}
 
-\item{x}{a \code{GDSFile} object or GDS file path.}
+\item{x}{a \code{GDSFile} object. or GDS file path (for
+\code{gdsnodes()}).}
 
 \item{value}{the new gds file path}
 
@@ -47,7 +48,12 @@ GDSFile(file, current_path = "")
     gds node.
 
 \code{gdsnodes}: a character vector for the available gds
-    nodes.
+    nodes. When input is GDS file path, it returns all available
+    gds nodes within the GDS file, no matter there is value or
+    not. When input is \code{GDSFile} object, it returns only the
+    gds nodes that could construct \code{GDSArray} objects, which
+    means that the gds node has non-zero-dimensions, and is
+    actually array.
 }
 \description{
 \code{GDSFile}: \code{GDSFile} is a light-weight class
