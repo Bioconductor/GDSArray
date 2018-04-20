@@ -20,7 +20,7 @@ setClass(
 )
 
 setMethod("show", "GDSFile", function(object) {
-    nodes <- gdsnodes(object@file)
+    nodes <- gdsnodes(object)
     nodes <- nodes[startsWith(nodes, object@current_path)]
     cat(
         "class: ", class(object), "\n",
@@ -78,7 +78,7 @@ setReplaceMethod("gdsfile", "GDSFile", function(x, value) {
 ###--------------------
 
 .DollarNames.GDSFile <- function(x, pattern = "") {
-    nodes <- gdsnodes(x@file)
+    nodes <- gdsnodes(x)
     nodes <- nodes[startsWith(nodes, x@current_path)]
     completions <- sub(sprintf("^%s/", x@current_path), "", nodes)
     sub("/.*", "", completions)

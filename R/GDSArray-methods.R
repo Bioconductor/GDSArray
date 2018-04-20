@@ -16,7 +16,7 @@
 #' type(ga)
 #' seed(ga)
 #' dim(seed(ga))
-#' gdsfile(gax)
+#' gdsfile(ga)
 setMethod("dim", "GDSArraySeed", function(x) x@dim)
 setMethod("dim", "GDSArray", function(x) dim(seed(x)))
 

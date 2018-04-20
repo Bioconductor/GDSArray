@@ -3,10 +3,10 @@
 - gf$genotype$data  -- correct!
 - gf$genotype$`~data`  -- dimnames
 - gf$sample.id, gf$annotation$qual  -- 1-dimensional gds nodes not correct. 
-- GDSFile show method, subnodes, should show gdsnodes(GDSFile)...
+- GDSFile show method, $completion method, show gdsnodes(GDSFile) instead of gdsnodes(x@file). -- done!
 - add method type,GDSArray, to be consistent with generic set in DelayedArray.   -- done!
 - add method dim, dimnames, GDSArray.   -- done!
-- add method documentations. 
+- add method documentations.   -- done!
 
 4/17/2018
 
