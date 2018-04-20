@@ -3,8 +3,9 @@
 #' 
 #' @description \code{dim}, \code{dimnames}: dimension and dimnames of
 #'     object contained in the GDS file.
-#' @return \code{dim}: the integer vector of \code{GDSArray}
-#'     dimensions.
+#' @param x the \code{GDSArray} and \code{GDSArraySeed} objects.
+#' @return \code{dim}: the integer vector of dimensions for
+#'     \code{GDSArray} or \code{GDSArraySeed} objects.
 #' @rdname GDSArray-methods
 #' @exportMethod dim
 #' @examples
@@ -12,13 +13,19 @@
 #' ga <- GDSArray(file, "sample.annot/pop.group")
 #' dim(ga)
 #' dimnames(ga)
+#' type(ga)
+#' seed(ga)
+#' dim(seed(ga))
+#' gdsfile(gax)
 setMethod("dim", "GDSArraySeed", function(x) x@dim)
+setMethod("dim", "GDSArray", function(x) dim(seed(x)))
 
 #' @rdname GDSArray-methods
 #' @exportMethod dimnames
 #' @return \code{dimnames}: the unnamed list of dimension names for
-#'     \code{GDSArray} object.
+#'     \code{GDSArray} and \code{GDSArraySeed} objects.
 setMethod("dimnames", "GDSArraySeed", function(x) x@dimnames)
+setMethod("dimnames", "GDSArray", function(x) dimnames(seed(x)))
 
 ## setGeneric("seed", function(x) standardGeneric("seed"))
 #' @rdname GDSArray-methods
@@ -28,6 +35,13 @@ setMethod("dimnames", "GDSArraySeed", function(x) x@dimnames)
 #' @return \code{seed}: the \code{GDSArraySeed} of \code{GDSArray}
 #'     object.
 setMethod("seed", "GDSArray", function(x) x@seed)
+
+#' @rdname GDSArray-methods
+#' @exportMethod type
+#' @description \code{type}: the data type of \code{GDSArray}.
+#' @return \code{type}: the data type of \code{GDSArray} or
+#'     \code{GDSArraySeed}.
+setMethod("type", "GDSArray", function(x) type(seed(x)))
 
 ## setGeneric( "seed<-", function(x, value) standardGeneric("seed<-"),
 ##     signature="x" )

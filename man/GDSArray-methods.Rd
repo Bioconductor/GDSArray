@@ -5,6 +5,7 @@
 \alias{dim,GDSArraySeed-method}
 \alias{dimnames,GDSArraySeed-method}
 \alias{seed,GDSArray-method}
+\alias{type,GDSArray-method}
 \alias{seed<-,GDSArray-method}
 \alias{gdsfile}
 \alias{gdsfile,GDSArraySeed-method}
@@ -20,6 +21,8 @@
 \S4method{dimnames}{GDSArraySeed}(x)
 
 \S4method{seed}{GDSArray}(x)
+
+\S4method{type}{GDSArray}(x)
 
 \S4method{seed}{GDSArray}(x) <- value
 
@@ -38,21 +41,26 @@ gdsfile(x) <- value
 \S4method{gdsfile}{GDSArray}(x) <- value
 }
 \arguments{
-\item{x}{GDSArray, GDSMatrix, GDSArraySeed, GDSFile or
-SummarizedExperiment object.}
+\item{x}{the \code{GDSArray} and \code{GDSArraySeed} objects.}
 
 \item{value}{the new \code{GDSArraySeed} for the \code{GDSArray}
 object.}
+
+\item{x}{GDSArray, GDSMatrix, GDSArraySeed, GDSFile or
+SummarizedExperiment object.}
 }
 \value{
-\code{dim}: the integer vector of \code{GDSArray}
-    dimensions.
+\code{dim}: the integer vector of dimensions for
+    \code{GDSArray} or \code{GDSArraySeed} objects.
 
 \code{dimnames}: the unnamed list of dimension names for
-    \code{GDSArray} object.
+    \code{GDSArray} and \code{GDSArraySeed} objects.
 
 \code{seed}: the \code{GDSArraySeed} of \code{GDSArray}
     object.
+
+\code{type}: the data type of \code{GDSArray} or
+    \code{GDSArraySeed}.
 
 \code{gdsfile}: the character string for the gds file path.
 }
@@ -62,6 +70,8 @@ object.}
 
 \code{seed}: the \code{GDSArraySeed} getter for
     \code{GDSArray} object.
+
+\code{type}: the data type of \code{GDSArray}.
 
 \code{seed<-}: the \code{GDSArraySeed} setter for
     \code{GDSArray} object.
@@ -77,4 +87,8 @@ file <- SNPRelate::snpgdsExampleFileName()
 ga <- GDSArray(file, "sample.annot/pop.group")
 dim(ga)
 dimnames(ga)
+type(ga)
+seed(ga)
+dim(seed(ga))
+gdsfile(ga)
 }

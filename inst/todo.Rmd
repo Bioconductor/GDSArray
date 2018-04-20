@@ -1,3 +1,13 @@
+4/20/2018
+
+- gf$genotype$data  -- correct!
+- gf$genotype$`~data`  -- dimnames
+- gf$sample.id, gf$annotation$qual  -- 1-dimensional gds nodes not correct. 
+- GDSFile show method, subnodes, should show gdsnodes(GDSFile)...
+- add method type,GDSArray, to be consistent with generic set in DelayedArray.   -- done!
+- add method dim, dimnames, GDSArray.   -- done!
+- add method documentations. 
+
 4/17/2018
 
 - implement: ".get\_gdsdata\_isarray", extract objdesp.gdsn(f,name)$is.array   --done!
