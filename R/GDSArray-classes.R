@@ -182,8 +182,6 @@ setAs(
 {
     if (!is(x@seed, "GDSArraySeed"))
         return(wmsg("'x@seed' must be a GDSArraySeed object"))
-    if (!DelayedArray:::is_pristine(x))
-        return(wmsg("'x' carries delayed operations"))
     TRUE
 }
 
@@ -195,7 +193,7 @@ setValidity2("GDSArray", .validate_GDSArray)
 
 setMethod(
     "DelayedArray", "GDSArraySeed",
-    function(seed) DelayedArray:::new_DelayedArray(seed, Class="GDSArray")
+    function(seed) new_DelayedArray(seed, Class="GDSArray")
 )
 
 #' @description \code{GDSArray}: The function to convert a gds file
