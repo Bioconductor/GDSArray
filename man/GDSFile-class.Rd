@@ -51,9 +51,11 @@ GDSFile(file, current_path = "")
     nodes. When input is GDS file path, it returns all available
     gds nodes within the GDS file, no matter there is value or
     not. When input is \code{GDSFile} object, it returns only the
-    gds nodes that could construct \code{GDSArray} objects, which
-    means that the gds node has non-zero-dimensions, and is
-    actually array.
+    gds nodes that could construct unique \code{GDSArray} objects,
+    which means that the gds node has non-zero-dimensions, and is
+    actually array, and all \code{GDSArray}s returned from these
+    nodes are unique (by excluding the gds nodes that has `code{~}
+    prefix).
 }
 \description{
 \code{GDSFile}: \code{GDSFile} is a light-weight class

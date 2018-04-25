@@ -5,7 +5,6 @@
 \alias{dim,GDSArraySeed-method}
 \alias{dimnames,GDSArraySeed-method}
 \alias{seed,GDSArray-method}
-\alias{type,GDSArray-method}
 \alias{seed<-,GDSArray-method}
 \alias{gdsfile}
 \alias{gdsfile,GDSArraySeed-method}
@@ -21,8 +20,6 @@
 \S4method{dimnames}{GDSArraySeed}(x)
 
 \S4method{seed}{GDSArray}(x)
-
-\S4method{type}{GDSArray}(x)
 
 \S4method{seed}{GDSArray}(x) <- value
 
@@ -59,9 +56,6 @@ SummarizedExperiment object.}
 \code{seed}: the \code{GDSArraySeed} of \code{GDSArray}
     object.
 
-\code{type}: the data type of \code{GDSArray} or
-    \code{GDSArraySeed}.
-
 \code{gdsfile}: the character string for the gds file path.
 }
 \description{
@@ -70,8 +64,6 @@ SummarizedExperiment object.}
 
 \code{seed}: the \code{GDSArraySeed} getter for
     \code{GDSArray} object.
-
-\code{type}: the data type of \code{GDSArray}.
 
 \code{seed<-}: the \code{GDSArraySeed} setter for
     \code{GDSArray} object.

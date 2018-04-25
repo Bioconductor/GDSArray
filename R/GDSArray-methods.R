@@ -18,14 +18,12 @@
 #' dim(seed(ga))
 #' gdsfile(ga)
 setMethod("dim", "GDSArraySeed", function(x) x@dim)
-setMethod("dim", "GDSArray", function(x) dim(seed(x)))
 
 #' @rdname GDSArray-methods
 #' @exportMethod dimnames
 #' @return \code{dimnames}: the unnamed list of dimension names for
 #'     \code{GDSArray} and \code{GDSArraySeed} objects.
 setMethod("dimnames", "GDSArraySeed", function(x) x@dimnames)
-setMethod("dimnames", "GDSArray", function(x) dimnames(seed(x)))
 
 ## setGeneric("seed", function(x) standardGeneric("seed"))
 #' @rdname GDSArray-methods
@@ -36,15 +34,6 @@ setMethod("dimnames", "GDSArray", function(x) dimnames(seed(x)))
 #'     object.
 setMethod("seed", "GDSArray", function(x) x@seed)
 
-#' @rdname GDSArray-methods
-#' @exportMethod type
-#' @description \code{type}: the data type of \code{GDSArray}.
-#' @return \code{type}: the data type of \code{GDSArray} or
-#'     \code{GDSArraySeed}.
-setMethod("type", "GDSArray", function(x) type(seed(x)))
-
-## setGeneric( "seed<-", function(x, value) standardGeneric("seed<-"),
-##     signature="x" )
 #' @rdname GDSArray-methods
 #' @exportMethod "seed<-"
 #' @description \code{seed<-}: the \code{GDSArraySeed} setter for
@@ -72,10 +61,6 @@ setMethod("gdsfile", "GDSArray", function(x) gdsfile(seed(x)))
 
 #' @rdname GDSArray-methods
 setMethod("gdsfile", "DelayedArray", function(x) gdsfile(seed(x)))
-
-## #' @rdname GDSArray-methods
-## #' @aliases GDSFile-method
-## setMethod("gdsfile", "GDSFile", function(x) x@file)
 
 #' "gdsfile<-"
 #' @description \code{gdsfile<-}: the setter of the gds file path for

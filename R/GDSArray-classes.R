@@ -34,7 +34,7 @@ setMethod(
 )
 
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### extract_array()
+### extract_array() ## must return array. 
 ###
 .extract_array_from_GDSArraySeed <- function(x, index)
 {
@@ -55,6 +55,9 @@ setMethod(
         } else {
             ans <- readex.gdsn(index.gdsn(f, x@name), index)
         }
+    }
+    if (!is(ans, "array")) {
+        ans <- array(ans)
     }
     ans
 }

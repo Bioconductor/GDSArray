@@ -133,9 +133,11 @@ setGeneric("gdsnodes", function(x) standGeneric(x), signature="x")
 #'     nodes. When input is GDS file path, it returns all available
 #'     gds nodes within the GDS file, no matter there is value or
 #'     not. When input is \code{GDSFile} object, it returns only the
-#'     gds nodes that could construct \code{GDSArray} objects, which
-#'     means that the gds node has non-zero-dimensions, and is
-#'     actually array.
+#'     gds nodes that could construct unique \code{GDSArray} objects,
+#'     which means that the gds node has non-zero-dimensions, and is
+#'     actually array, and all \code{GDSArray}s returned from these
+#'     nodes are unique (by excluding the gds nodes that has `code{~}
+#'     prefix).
 #' @examples
 #' file <- SNPRelate::snpgdsExampleFileName()
 #' gdsnodes(file)
@@ -172,9 +174,11 @@ setMethod("gdsnodes", "GDSFile", function(x)
     isarray <- vapply(nodes, function(node)
         .get_gdsdata_isarray(gdsfile(x), node),
         logical(1))
+    permuted_same_data <- grepl("~", nodes)
     dims <- lapply(nodes, function(node)
                    .get_gdsdata_dim(gdsfile(x), node))
     isnull_dims <- vapply(dims, is.null, logical(1))
-    any_zero_dims <- vapply(dims, function(dim) any(dim == 0), logical(1)) 
-    nodes[isarray & !isnull_dims & !any_zero_dims]
+    any_zero_dims <- vapply(dims, function(dim) any(dim == 0), logical(1))
+
+    nodes[isarray & !permuted_same_data & !isnull_dims & !any_zero_dims]
 })

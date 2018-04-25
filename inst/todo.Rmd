@@ -1,3 +1,20 @@
+4/23/2018
+
+- permute, 3-dimensional data, ??
+- GDSArray, >2-dimensional, all in variant X sample X other. 
+- GDS file, "data" and "~data" are identical except permuted??? 
+  - if yes, GDSFile only show "subnodes" of "data", not "~data".   -- done!
+  - same for gdsnodes(file).   -- to do or not? 
+  - Because GDSArray() returns the array in a fixed order: vaiant X
+    sample X other dimension. No need for permutation to return the
+    same data.
+  
+- extract\_array, return array(). called inside: DelayedArray:::.extract\_array\_with_dimnames(). -- done!
+- extract\_array, method for "GDSArray" instead of "GDSArraySeed"... 
+- https://github.com/Bioconductor/DelayedArray/blob/master/vignettes/02-Implementing_a_backend.Rmd
+
+
+
 4/20/2018
 
 - gf$genotype$data  -- correct!
