@@ -19,7 +19,9 @@
 .get_gdsdata_non1D_array <- function(file)
 {
     names.gdsn <- gdsnodes(file)
-    isarray <- vapply(names.gdsn, function(x) .get_gdsdata_isarray(file, x), logical(1))
+    isarray <- vapply(names.gdsn,
+                      function(x) .get_gdsdata_isarray(file, x),
+                      logical(1))
     dims <- lapply(names.gdsn, function(x) .get_gdsdata_dim(file, x))
     names.gdsn[
         isarray & lengths(dims) > 1 & 
@@ -89,8 +91,9 @@
     on.exit(closefn.gds(f))
     
     type <- objdesp.gdsn(index.gdsn(f, node))$type
-    type_levels <- c("Label", "Folder", "VFolder", "Raw", "Integer",
-                     "Factor", "Logical", "Real", "String", "Unknown")
+    type_levels <- c(
+        "Label", "Folder", "VFolder", "Raw", "Integer",
+        "Factor", "Logical", "Real", "String", "Unknown")
     if (!type %in% type_levels)
         stop(
             wmsg("The type of GDS nodes should be one of:\n",

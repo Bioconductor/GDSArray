@@ -50,7 +50,8 @@ setReplaceMethod("seed", "GDSArray", function(x, value) {
 #'     SummarizedExperiment object.
 #' @return \code{gdsfile}: the character string for the gds file path.
 #' @rdname GDSArray-methods
-setGeneric("gdsfile", function(object) standardGeneric("gdsfile"), signature="object")
+setGeneric("gdsfile", function(object) standardGeneric("gdsfile"),
+           signature="object")
 
 #' @rdname GDSArray-methods
 #' @exportMethod gdsfile
@@ -83,6 +84,8 @@ setReplaceMethod( "gdsfile", "GDSArraySeed", function(object, value) {
 #' @exportMethod "gdsfile<-"
 setReplaceMethod("gdsfile", "GDSArray", function(object, value) {
     new_filepath <- tools::file_path_as_absolute(value)
-    object@seed <- BiocGenerics:::replaceSlots(seed(object), file=value, check=FALSE)
+    object@seed <- BiocGenerics:::replaceSlots(seed(object),
+                                               file=value,
+                                               check=FALSE)
     object
 })
