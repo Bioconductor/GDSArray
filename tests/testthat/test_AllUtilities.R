@@ -12,7 +12,7 @@ test_that("get GDS file format works", {
 })
 
 test_that("get gds all nodes, array nodes, and node dimension works", {
-    .get_gdsdata_arrayNodes <- GDSArray:::.get_gdsdata_arrayNodes
+    .get_gdsdata_non1D_array <- GDSArray:::.get_gdsdata_non1D_array
     .get_gdsdata_dim <- GDSArray:::.get_gdsdata_dim
     
     file <- system.file(package="SeqArray", "extdata", "CEU_Exon.gds")
@@ -20,8 +20,8 @@ test_that("get gds all nodes, array nodes, and node dimension works", {
     allnodes <- gdsnodes(file)
     expect_true(is(allnodes, "character"))
 
-    ## arraynodes, dims
-    arraynodes <- .get_gdsdata_arrayNodes(file)
+    ## non1D_array nodes, dims
+    arraynodes <- .get_gdsdata_non1D_array(file)
     dims <- lapply(arraynodes, function(x) .get_gdsdata_dim(file, x))
     expect_true(validObject(dims))
 

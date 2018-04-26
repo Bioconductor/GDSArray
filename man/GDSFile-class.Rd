@@ -20,9 +20,9 @@
 \usage{
 GDSFile(file, current_path = "")
 
-\S4method{gdsfile}{GDSFile}(x)
+\S4method{gdsfile}{GDSFile}(object)
 
-\S4method{gdsfile}{GDSFile}(x) <- value
+\S4method{gdsfile}{GDSFile}(object) <- value
 
 \S4method{$}{GDSFile}(x, name)
 
@@ -33,15 +33,17 @@ GDSFile(file, current_path = "")
 
 \item{current_path}{the current path to the closest gds node.}
 
-\item{x}{a \code{GDSFile} object. or GDS file path (for
-\code{gdsnodes()}).}
+\item{object}{\code{GDSFile} object.}
 
 \item{value}{the new gds file path}
+
+\item{x}{a \code{GDSFile} object. or GDS file path (for
+\code{gdsnodes()}).}
 
 \item{name}{the name of gds node}
 }
 \value{
-\code{gdsfile}: the file path of corresponding GDS file.
+\code{gdsfile}: the file path of corresponding \code{GDSfile} object.
 
 \code{$}: a \code{GDSFile} with updated \code{@current_path}, or
     \code{GDSArray} object if the \code{current_path} is a valid
@@ -78,6 +80,10 @@ GDSFile(file, current_path = "")
     ".gds".
 }
 \examples{
+file <- SeqArray::seqExampleFileName("gds")
+gf <- GDSFile(file)
+gdsfile(gf)
+
 file <- SNPRelate::snpgdsExampleFileName()
 gdsnodes(file)
 file1 <- SeqArray::seqExampleFileName("gds")

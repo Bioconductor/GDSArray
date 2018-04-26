@@ -58,9 +58,10 @@ GDSFile <- function(file, current_path="")
 #' @aliases GDSFile-method
 #' @description \code{gdsfile}: \code{file} slot getter for
 #'     \code{GDSFile} object.
-#' @return \code{gdsfile}: the file path of corresponding GDS file.
+#' @param object \code{GDSFile} object.
+#' @return \code{gdsfile}: the file path of corresponding \code{GDSfile} object.
 
-setMethod("gdsfile", "GDSFile", function(x) x@file)
+setMethod("gdsfile", "GDSFile", function(object) object@file)
 
 #' @exportMethod "gdsfile<-"
 #' @rdname GDSFile-class
@@ -68,9 +69,14 @@ setMethod("gdsfile", "GDSFile", function(x) x@file)
 #' @description \code{gdsfile<-}: \code{file} slot setter for
 #'     \code{GDSFile} object.
 #' @param value the new gds file path
-setReplaceMethod("gdsfile", "GDSFile", function(x, value) {
+#' @examples
+#' file <- SeqArray::seqExampleFileName("gds")
+#' gf <- GDSFile(file)
+#' gdsfile(gf)
+#' 
+setReplaceMethod("gdsfile", "GDSFile", function(object, value) {
     new_filepath <- tools::file_path_as_absolute(value)
-    BiocGenerics:::replaceSlots(x, file=value, check=FALSE)
+    BiocGenerics:::replaceSlots(object, file=value, check=FALSE)
 })
 
 ###--------------------

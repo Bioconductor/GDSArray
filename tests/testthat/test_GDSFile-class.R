@@ -35,5 +35,5 @@ test_that("$ works", {
 test_that("gdsnodes works", {
     file <- SeqArray::seqExampleFileName("gds")
     gf <- GDSFile(file)
-    expect_identical(gdsnodes(file), gdsnodes(gf))
+    expect_true(all(gdsnodes(gf) %in% gdsnodes(file)))
 })

@@ -46,21 +46,21 @@ setReplaceMethod("seed", "GDSArray", function(x, value) {
 
 #' @description \code{gdsfile}: on-disk location of GDS file
 #'     represented by this object.
-#' @param x GDSArray, GDSMatrix, GDSArraySeed, GDSFile or
+#' @param object GDSArray, GDSMatrix, GDSArraySeed, GDSFile or
 #'     SummarizedExperiment object.
 #' @return \code{gdsfile}: the character string for the gds file path.
 #' @rdname GDSArray-methods
-setGeneric("gdsfile", function(x) standardGeneric("gdsfile"), signature="x")
+setGeneric("gdsfile", function(object) standardGeneric("gdsfile"), signature="object")
 
 #' @rdname GDSArray-methods
 #' @exportMethod gdsfile
-setMethod("gdsfile", "GDSArraySeed", function(x) x@file)
+setMethod("gdsfile", "GDSArraySeed", function(object) object@file)
 
 #' @rdname GDSArray-methods
-setMethod("gdsfile", "GDSArray", function(x) gdsfile(seed(x)))
+setMethod("gdsfile", "GDSArray", function(object) gdsfile(seed(object)))
 
 #' @rdname GDSArray-methods
-setMethod("gdsfile", "DelayedArray", function(x) gdsfile(seed(x)))
+setMethod("gdsfile", "DelayedArray", function(object) gdsfile(seed(object)))
 
 #' "gdsfile<-"
 #' @description \code{gdsfile<-}: the setter of the gds file path for
@@ -68,21 +68,21 @@ setMethod("gdsfile", "DelayedArray", function(x) gdsfile(seed(x)))
 #' @rdname GDSArray-methods
 setGeneric(
     "gdsfile<-",
-    function(x, value) standardGeneric("gdsfile<-"),
-    signature="x")
+    function(object, value) standardGeneric("gdsfile<-"),
+    signature="object")
 
 #' @rdname GDSArray-methods
 #' @exportMethod "gdsfile<-"
-setReplaceMethod( "gdsfile", "GDSArraySeed", function(x, value) {
+setReplaceMethod( "gdsfile", "GDSArraySeed", function(object, value) {
     new_filepath <- tools::file_path_as_absolute(value)
     ## Set new path.
-    BiocGenerics:::replaceSlots(x, file=value, check=FALSE)
+    BiocGenerics:::replaceSlots(object, file=value, check=FALSE)
 })
 
 #' @rdname GDSArray-methods
 #' @exportMethod "gdsfile<-"
-setReplaceMethod("gdsfile", "GDSArray", function(x, value) {
+setReplaceMethod("gdsfile", "GDSArray", function(object, value) {
     new_filepath <- tools::file_path_as_absolute(value)
-    x@seed <- BiocGenerics:::replaceSlots(seed(x), file=value, check=FALSE)
-    x
+    object@seed <- BiocGenerics:::replaceSlots(seed(object), file=value, check=FALSE)
+    object
 })

@@ -23,19 +23,19 @@
 
 \S4method{seed}{GDSArray}(x) <- value
 
-gdsfile(x)
+gdsfile(object)
 
-\S4method{gdsfile}{GDSArraySeed}(x)
+\S4method{gdsfile}{GDSArraySeed}(object)
 
-\S4method{gdsfile}{GDSArray}(x)
+\S4method{gdsfile}{GDSArray}(object)
 
-\S4method{gdsfile}{DelayedArray}(x)
+\S4method{gdsfile}{DelayedArray}(object)
 
-gdsfile(x) <- value
+gdsfile(object) <- value
 
-\S4method{gdsfile}{GDSArraySeed}(x) <- value
+\S4method{gdsfile}{GDSArraySeed}(object) <- value
 
-\S4method{gdsfile}{GDSArray}(x) <- value
+\S4method{gdsfile}{GDSArray}(object) <- value
 }
 \arguments{
 \item{x}{the \code{GDSArray} and \code{GDSArraySeed} objects.}
@@ -43,7 +43,7 @@ gdsfile(x) <- value
 \item{value}{the new \code{GDSArraySeed} for the \code{GDSArray}
 object.}
 
-\item{x}{GDSArray, GDSMatrix, GDSArraySeed, GDSFile or
+\item{object}{GDSArray, GDSMatrix, GDSArraySeed, GDSFile or
 SummarizedExperiment object.}
 }
 \value{
