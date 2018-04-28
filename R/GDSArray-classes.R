@@ -46,18 +46,16 @@ setMethod(
         f <- openfn.gds(x@file)
         on.exit(closefn.gds(f))
         if (x@permute) {
-            permdim <- rev(seq_len(length(index)))
-            index <- index[permdim] ## multi-dimensional supported
+            index <- rev(index)
             dat <- readex.gdsn(index.gdsn(f, x@name), index)
-            if (!is(dat, "array"))   ## dat must be an array
-                dat <- array(dat, dim=ans_dim[permdim])
+            if (!is.array(dat))  ## 'dat' must be an array
+                dim(dat) <- rev(ans_dim)
             ans <- aperm(dat)
         } else {
             ans <- readex.gdsn(index.gdsn(f, x@name), index)
+            if (!is.array(ans))  ## 'ans' must be an array
+                dim(ans) <- ans_dim
         }
-    }
-    if (!is(ans, "array")) {
-        ans <- array(ans)
     }
     ans
 }
@@ -194,8 +192,6 @@ setAs(
 {
     if (!is(x@seed, "GDSArraySeed"))
         return(wmsg("'x@seed' must be a GDSArraySeed object"))
-    if (!DelayedArray:::is_pristine(x))
-        return(wmsg("'x' carries delayed operations"))
     TRUE
 }
 
@@ -207,7 +203,7 @@ setValidity2("GDSArray", .validate_GDSArray)
 
 setMethod(
     "DelayedArray", "GDSArraySeed",
-    function(seed) DelayedArray:::new_DelayedArray(seed, Class="GDSArray")
+    function(seed) new_DelayedArray(seed, Class="GDSArray")
 )
 
 #' @description \code{GDSArray}: The function to convert a gds file
