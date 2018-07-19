@@ -46,8 +46,8 @@ infrastructure.
 1. Download the package from Bioconductor.
 
 ```{r getPackage, eval=FALSE}
-source("https://bioconductor.org/biocLite.R")
-biocLite("GDSArray")
+library(BiocManager)
+install("GDSArray")
 ```
 
 2. Load the package into R session.
