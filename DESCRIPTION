@@ -1,6 +1,6 @@
 Package: GDSArray
 Title: Representing GDS files as array-like objects
-Version: 1.1.0
+Version: 1.1.1
 Authors@R: c(
     person(
         "Qian", "Liu", email = "Qian.Liu@roswellpark.org", role=c("aut", "cre")
@@ -36,3 +36,4 @@ Suggests:
     testthat,
     knitr,
     BiocStyle
+    BiocManager
