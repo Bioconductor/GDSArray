@@ -1,3 +1,13 @@
+5/1/2018, summary
+1. "extract_array", updated, to return only array. (for 1-dimensional data also).
+2. dim, dimnames, type for "GDSArray" works by implementing "extract_array" correctly. 
+3. show method works for "DelayedSubset" object inside vignette, by depending on S4Vector 0.17.43. 
+4. gdsnodes(GDSFile) returns only the gds nodes that could construct
+     unique ‘GDSArray’ objects, which means that the gds node has
+     non-zero-dimensions, and is actually array, and all ‘GDSArray’s
+     returned from these nodes are unique (by excluding the gds nodes
+     that has `code~ prefix). 
+
 4/23/2018
 
 - permute, 3-dimensional data, ??
@@ -14,13 +24,14 @@
 - https://github.com/Bioconductor/DelayedArray/blob/master/vignettes/02-Implementing_a_backend.Rmd
 
 
-
 4/20/2018
 
 - gf$genotype$data  -- correct!
 - gf$genotype$`~data`  -- dimnames
 - gf$sample.id, gf$annotation$qual  -- 1-dimensional gds nodes not correct. 
+
 - GDSFile show method, $completion method, show gdsnodes(GDSFile) instead of gdsnodes(x@file). -- done!
+
 - add method type,GDSArray, to be consistent with generic set in DelayedArray.   -- done!
 - add method dim, dimnames, GDSArray.   -- done!
 - add method documentations.   -- done!

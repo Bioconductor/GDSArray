@@ -148,8 +148,8 @@ GDSArraySeed <- function(file, name=NA)
 ### and DelayedMatrix objects.
 ###
 
+## #' @rawNamespace import(IRanges, except="concatenateObjects")
 #' @import S4Vectors
-#' @import IRanges
 #' @import BiocGenerics
 #' @import DelayedArray
 #'
