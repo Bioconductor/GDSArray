@@ -3,7 +3,7 @@ Title: Representing GDS files as array-like objects
 Version: 1.1.1
 Authors@R: c(
     person(
-        "Qian", "Liu", email = "Qian.Liu@roswellpark.org", role=c("aut", "cre")
+        "Qian", "Liu", email = "qliu7@buffalo.edu", role=c("aut", "cre")
     ),
     person("Martin", "Morgan", role = "ctb"),
     person("Hervé",  "Pagès", role = "ctb"))
