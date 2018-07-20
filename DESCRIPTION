@@ -35,5 +35,5 @@ VignetteBuilder: knitr
 Suggests:
     testthat,
     knitr,
-    BiocStyle
+    BiocStyle,
     BiocManager
