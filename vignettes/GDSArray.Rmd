@@ -46,7 +46,7 @@ infrastructure.
 1. Download the package from Bioconductor.
 
 ```{r getPackage, eval=FALSE}
-if (!require("BiocManager"))
+if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("GDSArray")
 ```
