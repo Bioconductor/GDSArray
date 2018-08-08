@@ -5,16 +5,15 @@ Authors@R: c(
     person(
         "Qian", "Liu", email = "qliu7@buffalo.edu", role=c("aut", "cre")
     ),
-    person("Martin", "Morgan", role = "ctb"),
-    person("Hervé",  "Pagès", role = "ctb"))
+    person("Martin", "Morgan", role = c("aut", "ctb")),
+    person("Hervé",  "Pagès", role = c("aut", "ctb"))
 Description: GDS files are widely used to represent genotyping or
     sequence data. The GDSArray package implements the `GDSArray`
     class to represent nodes in GDS files in a matrix-like
     representation that allows easy manipulation (e.g., subsetting,
     mathematical transformation) in _R_. The data remains on disk
     until needed, so that very large files can be processed.
-biocViews: Infrastructure, DataRepresentation, Sequencing, Coverage,
-    Annotation, GenomeAnnotation, GenotypingArray, VariantAnnotation
+biocViews: Infrastructure, DataRepresentation, Sequencing, GenotypingArray
 Depends:
     R (>= 3.5),
     gdsfmt,
