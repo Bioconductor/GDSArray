@@ -96,7 +96,7 @@ GDSArraySeed <- function(file, name=NA)
             "'file' must be a single string specifying the path to ",
             "the gds file where the dataset is located."))
     if (!isSingleStringOrNA(name))
-        stop("'type' must be a single string or NA")
+        stop("'name' must be a single string or NA")
     file <- file_path_as_absolute(file)
 
     dims <- .get_gdsdata_dim(file, node = name)
