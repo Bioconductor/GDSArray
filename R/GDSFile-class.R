@@ -82,7 +82,8 @@ setReplaceMethod("gdsfile", "GDSFile", function(object, value) {
 ###--------------------
 ### dollar completion
 ###--------------------
-
+#' @importFrom utils .DollarNames
+#' @export
 .DollarNames.GDSFile <- function(x, pattern = "") {
     nodes <- gdsnodes(x)
     nodes <- nodes[startsWith(nodes, x@current_path)]

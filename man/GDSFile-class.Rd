@@ -8,12 +8,9 @@
 \alias{gdsfile,GDSFile-method}
 \alias{GDSFile-method}
 \alias{gdsfile<-,GDSFile-method}
-\alias{GDSFile-method}
 \alias{GDSFile,gdsfile-method}
 \alias{$,GDSFile-method}
-\alias{GDSFile-method}
 \alias{gdsnodes}
-\alias{GDSFile-method}
 \alias{gdsnodes,ANY-method}
 \alias{gdsnodes,GDSFile-method}
 \title{GDSFile constructor and methods.}
