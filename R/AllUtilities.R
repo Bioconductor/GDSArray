@@ -139,7 +139,7 @@
         stopifnot(length(variant.id) == dimSumm["variant"])
         stopifnot(length(sample.id) == dimSumm["sample"])
         dimnames <- list(
-            ploidy.id = seq_len(dimSumm[1]),
+            ploidy.id = as.character(seq_len(dimSumm[1])),
             sample.id = sample.id,
             variant.id = as.character(variant.id)
         )

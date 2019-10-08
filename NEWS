@@ -1,28 +1,39 @@
+CHANGE IN VERSION 1.5.3
+----------------------------
+
+NEW FEATURES
+
++ Dollar completion for 'GDSFile' class.
+
+BUG FIXES
+
++ dimnames() of GDSArray and GDSArraySeed is now list of all character vectors.
+
 CHANGE IN VERSION 0.99.11
 ----------------------------
-- example(GDSArray) added. 
++ example(GDSArray) added. 
 
 CHANGE IN VERSION 0.99.10
 ----------------------------
-- renamed "gdsNodes" method as "gdsnodes".
++ renamed "gdsNodes" method as "gdsnodes".
 
 CHANGE IN VERSION 0.99.7
 ----------------------------
-- renamed "GDSlight" as "GDSFile".
-- added accessors for "GDSFile".
-- $ method check for valid gds node.
++ renamed "GDSlight" as "GDSFile".
++ added accessors for "GDSFile".
++ $ method check for valid gds node.
 
 CHANGE IN VERSION 0.99.6
 ----------------------------
-- GDSArray seed setter and getter.
++ GDSArray seed setter and getter.
 
 CHANGE IN VERSION 0.99.5
 ----------------------------
-- Implemented "GDSlight" class and $ method.
++ Implemented "GDSlight" class and $ method.
 
 CHANGE IN VERSION 0.99.1
 ----------------------------
-- Added example for GDSArray-methods.Rd.
-- Added BiocViews. 
++ Added example for GDSArray-methods.Rd.
++ Added BiocViews. 
 
  

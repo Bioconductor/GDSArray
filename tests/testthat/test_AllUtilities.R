@@ -51,6 +51,7 @@ test_that("extracting gds node dimnames works", {
     file <- system.file(package="SeqArray", "extdata", "CEU_Exon.gds")
     dimnames <- .get_gdsdata_dimnames(file, "genotype/data")
     expect_true(is(dimnames, "list"))
+    expect_true(all( vapply(dimnames, is, logical(1), "character") ))
 
     dims <- .get_gdsdata_dim(file, "genotype/data")
     expect_true(identical(unname(lengths(dimnames)), dims))
