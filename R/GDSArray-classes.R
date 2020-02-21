@@ -36,26 +36,48 @@ setMethod(
 ### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ### extract_array() ## must return array. 
 ###
+#' @importFrom SeqArray seqSetFilter seqResetFilter seqGetData
+#'
 .extract_array_from_GDSArraySeed <- function(x, index)
 {
     ans_dim <- DelayedArray:::get_Nindex_lengths(index, dim(x))
     if (any(ans_dim == 0L)){
-        ans <- x@first_val[0]  ## integer(0) / character(0)
+        tpe <- class(x@first_val)
+        ans <- get(tpe)(0)
+        ## ans <- x@first_val[0]  ## integer(0) / character(0)
         dim(ans) <- ans_dim
     } else {
-        f <- openfn.gds(x@file)
-        on.exit(closefn.gds(f))
-        if (x@permute) {
-            index <- rev(index)
-            dat <- readex.gdsn(index.gdsn(f, x@name), index)
-            if (!is.array(dat))  ## 'dat' must be an array
-                dim(dat) <- rev(ans_dim)
-            ans <- aperm(dat)
+        ff <- .get_gds_fileFormat(x@file)
+        if (ff == "SEQ_ARRAY") {
+            f <- seqOpen(x@file)
+            on.exit(seqClose(f))
+            nodegroup <- names(dimnames(x))
+            variant.sel <- sample.sel <- NULL
+            if (any(grepl("variant", nodegroup))) {
+                variant.sel <- index[[grep("variant", nodegroup)]]
+            }
+            if (any(grepl("sample", nodegroup))) {
+                sample.sel <- index[[grep("sample", nodegroup)]]
+            }
+            seqSetFilter(f, variant.sel = variant.sel,
+                         sample.sel = sample.sel, verbose = FALSE)
+            ans <- seqGetData(f, x@name)
+            if (grepl("DP", x@name))  ## for "annotation/format/DP" only
+                ans <- ans$data
+            seqResetFilter(f, verbose = FALSE)
+            if (x@permute)
+                ans <- aperm(ans)
         } else {
+            f <- openfn.gds(x@file)
+            on.exit(closefn.gds(f))
+            if (x@permute)
+                index <- rev(index)
             ans <- readex.gdsn(index.gdsn(f, x@name), index)
-            if (!is.array(ans))  ## 'ans' must be an array
-                dim(ans) <- ans_dim
+            if (x@permute)
+                ans <- aperm(ans)
         }
+        if (!is.array(ans))  ## 'ans' must be an array
+            dim(ans) <- ans_dim
     }
     ans
 }
@@ -99,11 +121,11 @@ GDSArraySeed <- function(file, name=NA)
         stop("'name' must be a single string or NA")
     file <- file_path_as_absolute(file)
 
-    dims <- .get_gdsdata_dim(file, node = name)
-    dimnames <- .get_gdsdata_dimnames(file, node = name)
+    dims <- .get_gdsnode_dim(file, node = name)
+    dimnames <- .get_gdsnode_dimnames(file, node = name)
 
     if (is.null(dims)) {
-        type <- .get_gdsdata_type(file, name)
+        type <- .get_gdsnode_type(file, name)
         stop(wmsg("The gds node \"", name, "\" is type: ", type,
                   ", which is not valid for constructing GDSArray"))
     }
@@ -117,12 +139,12 @@ GDSArraySeed <- function(file, name=NA)
             "is not consistent with data dimensions."))
     }
 
-    first_val <- .get_gdsdata_first_val(file, node = name)
+    first_val <- .get_gdsnode_first_val(file, node = name)
 
     if (length(dims) == 1)
         permute = FALSE
     else 
-        permute = !.read_gdsdata_sampleInCol(file, node = name)
+        permute = !.read_gdsnode_sampleInCol(file, node = name)
 
     if (permute) {
         dims <- rev(dims)
@@ -236,12 +258,14 @@ GDSArray <- function(file, name=NA)
                 "when passed an GDSArraySeed object"))
         seed <- file
     } else {
-        ff <- .get_gdsdata_fileFormat(file)
-        if (ff == "SNP_ARRAY") {
-            if (is.na(name)) name <- "genotype"
-        } else if (ff == "SEQ_ARRAY") {
-            if (is.na(name)) name <- "genotype/data"
-        }
+        ## ff <- .get_gds_fileFormat(file)
+        ## if (ff == "SNP_ARRAY") {
+        ##     if (is.na(name)) name <- "genotype"
+        ## } else if (ff == "SEQ_ARRAY") {
+        ##     if (is.na(name)) name <- "genotype/data"
+        ## }
+        if (is.na(name))
+            name <- "genotype"
         seed <- GDSArraySeed(file, name)
     }
     DelayedArray(seed)   ## does the automatic coercion to GDSMatrix if 2-dim.

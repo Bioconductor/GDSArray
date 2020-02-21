@@ -155,20 +155,33 @@ setGeneric("gdsnodes", function(x) standGeneric(x), signature="x")
 #' gdsfile(gf)
 setMethod("gdsnodes", "ANY", function(x)
 {
-    f <- openfn.gds(x)
-    on.exit(closefn.gds(f))
-    
-    names.gdsn <- ls.gdsn(f)
-    repeat {
-        a <- lapply(names.gdsn, function(x) ls.gdsn(index.gdsn(f, x)))
-        if (all(lengths(a)==0L)) {
-            break
-        } else {
-            a[lengths(a)==0] <- ""
-            n <- rep(names.gdsn, lengths(a))
-            all.gdsn <- paste(n, unlist(a), sep="/")
-            all.gdsn <- sub("/$", "", all.gdsn)
-            names.gdsn <- all.gdsn
+    ff <- .get_gds_fileFormat(x)
+    if (ff == "SEQ_ARRAY") {
+        cmnnodes <- c("sample.id", "variant.id", "position",
+                         "chromosome", "allele", "genotype",
+                         "annotation/id", "annotation/qual",
+                         "annotation/filter")
+        f <- seqOpen(x)
+        on.exit(seqClose(f))
+        info.nodes <- ls.gdsn(index.gdsn(f, "annotation/info"))
+        format.nodes <- ls.gdsn(index.gdsn(f, "annotation/format"))
+        names.gdsn <- c(cmnnodes, paste0("annotation/info/", info.nodes),
+                        paste0("annotation/format/", format.nodes))
+    } else {
+        f <- openfn.gds(x)
+        on.exit(closefn.gds(f))
+        names.gdsn <- ls.gdsn(f)
+        repeat {
+            a <- lapply(names.gdsn, function(x) ls.gdsn(index.gdsn(f, x)))
+            if (all(lengths(a)==0L)) {
+                break
+            } else {
+                a[lengths(a)==0] <- ""
+                n <- rep(names.gdsn, lengths(a))
+                all.gdsn <- paste(n, unlist(a), sep="/")
+                all.gdsn <- sub("/$", "", all.gdsn)
+                names.gdsn <- all.gdsn
+            }
         }
     }
     names.gdsn
@@ -178,14 +191,26 @@ setMethod("gdsnodes", "ANY", function(x)
 setMethod("gdsnodes", "GDSFile", function(x)
 {
     nodes <- gdsnodes(gdsfile(x))
-    isarray <- vapply(nodes, function(node)
-        .get_gdsdata_isarray(gdsfile(x), node),
-        logical(1))
-    permuted_same_data <- grepl("~", nodes)
-    dims <- lapply(nodes, function(node)
-                   .get_gdsdata_dim(gdsfile(x), node))
-    isnull_dims <- vapply(dims, is.null, logical(1))
-    any_zero_dims <- vapply(dims, function(dim) any(dim == 0), logical(1))
-
-    nodes[isarray & !permuted_same_data & !isnull_dims & !any_zero_dims]
 })
+
+## #' @exportMethod gdsnodes
+## setMethod("gdsnodes", "GDSFile", function(x)
+## {
+##     nodes <- gdsnodes(gdsfile(x))
+##     isarray <- vapply(nodes, function(node)
+##         .get_gdsnode_isarray(gdsfile(x), node),
+##         logical(1))
+##     permuted_same_data <- grepl("~", nodes)
+##     dims <- lapply(nodes, function(node)
+##                    .get_gdsnode_dim(gdsfile(x), node))
+##     isnull_dims <- vapply(dims, is.null, logical(1))
+##     any_zero_dims <- vapply(dims, function(dim) any(dim == 0), logical(1))
+
+##     nodes[isarray & !permuted_same_data & !isnull_dims & !any_zero_dims]
+## })
+
+
+## todo: 1. GDSFile(seqfile) debug.  -- done! 
+## 2. remove ".get_gdsnode_isarray". Remove, Check, Documentation.
+## 3. remove ".get_gdsnode_first_val"?? used in .extract_array now. 
+## 4. check DDF, VE.
