@@ -60,16 +60,16 @@ genotype data.}
 file <- SNPRelate::snpgdsExampleFileName()
 allnodes <- gdsnodes(file)  ## print all available gds nodes in file.
 allnodes
-GDSArray(file)
+## GDSArray(file) #> deactivate temporarily 3/4/20
 GDSArray(file, "sample.annot/pop.group")
 
 file1 <- SeqArray::seqExampleFileName("gds")
 allnodes1 <- gdsnodes(file1)  ## print all available gds nodes in file1. 
 allnodes1
-GDSArray(file1)
+## GDSArray(file1) #> deactivate temporarily 3/4/20
 GDSArray(file1, "variant.id")
 GDSArray(file1, "sample.annotation/family")
-GDSArray(file1, "annotation/format/DP/data")
+GDSArray(file1, "annotation/format/DP")
 GDSArray(file1, "annotation/info/DP")
 example("GDSArray")
 

@@ -62,7 +62,7 @@ setMethod(
             seqSetFilter(f, variant.sel = variant.sel,
                          sample.sel = sample.sel, verbose = FALSE)
             ans <- seqGetData(f, x@name)
-            if (grepl("DP", x@name))  ## for "annotation/format/DP" only
+            if (grepl("format/DP", x@name))  ## for "annotation/format/DP" only
                 ans <- ans$data
             seqResetFilter(f, verbose = FALSE)
             if (x@permute)
@@ -237,16 +237,16 @@ setMethod(
 #' file <- SNPRelate::snpgdsExampleFileName()
 #' allnodes <- gdsnodes(file)  ## print all available gds nodes in file.
 #' allnodes
-#' GDSArray(file)
+#' ## GDSArray(file) #> deactivate temporarily 3/4/20
 #' GDSArray(file, "sample.annot/pop.group")
 #'
 #' file1 <- SeqArray::seqExampleFileName("gds")
 #' allnodes1 <- gdsnodes(file1)  ## print all available gds nodes in file1. 
 #' allnodes1
-#' GDSArray(file1)
+#' ## GDSArray(file1) #> deactivate temporarily 3/4/20
 #' GDSArray(file1, "variant.id")
 #' GDSArray(file1, "sample.annotation/family")
-#' GDSArray(file1, "annotation/format/DP/data")
+#' GDSArray(file1, "annotation/format/DP")
 #' GDSArray(file1, "annotation/info/DP")
 
 GDSArray <- function(file, name=NA)
@@ -286,6 +286,6 @@ GDSArray <- function(file, name=NA)
 example <- function(pkg="GDSArray")
 {
     file <- SeqArray::seqExampleFileName("gds")
-    gds <- GDSArray(file, "annotation/format/DP/data")
+    gds <- GDSArray(file, "annotation/format/DP")
     gds
 }

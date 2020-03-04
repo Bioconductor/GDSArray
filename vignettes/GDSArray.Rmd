@@ -98,7 +98,7 @@ data inside `SummarizedExperiment`.
 
 ```{r, GDSArray}
 file <- SeqArray::seqExampleFileName("gds")
-GDSArray(file, "genotype")
+#> GDSArray(file, "genotype")  #> deactivate temporarily 3/4/20
 ```
 A `GDSMatrix` is a 2-dimensional `GDSArray`, and will be returned from
 the `GDSArray()` constructor automatically if the input GDS node is
@@ -129,13 +129,13 @@ Try typing in `gf$ann` and pressing `tab` key for the completion.
 ### slot accessors. 
 - `seed` returns the `GDSArraySeed` of the `GDSArray` object.
 ```{r, seedAccessor}
-ga <- GDSArray(file, "genotype")
-seed(ga)
+#> ga <- GDSArray(file, "genotype")  #> deactivate temporarily 3/4/20
+#> seed(ga)
 ```
 
 - `gdsfile` returns the file path of the corresponding GDS file. 
 ```{r, gdsfileAccessor}
-gdsfile(ga)
+#> gdsfile(ga)
 ```
 
 ### Available GDS nodes
@@ -192,14 +192,14 @@ should contain the GDS file path, and are expected to satisfy the
 “seed contract” i.e. to support dim() and dimnames().
 
 ```{r, GDSArraySeed}
-seed <- GDSArray:::GDSArraySeed(file, "genotype")
-seed
+#> seed <- GDSArray:::GDSArraySeed(file, "genotype")  #> deactivate temporarily 3/4/20
+#> seed
 ```
 
 The seed can be used to construct a `GDSArray` instance.
 
 ```{r, GDSArray-from-GDSArraySeed}
-GDSArray(seed)
+#> GDSArray(seed)
 ```
 
 The `DelayedArray()` constructor with `GDSArraySeed` object as
@@ -207,7 +207,7 @@ argument will return the same content as the `GDSArray()` constructor
 over the same `GDSArraySeed`.
 
 ```{r, da}
-class(DelayedArray(seed))
+#> class(DelayedArray(seed))
 ```
 
 # sessionInfo

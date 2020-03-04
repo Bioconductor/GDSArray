@@ -86,7 +86,7 @@
     dimSumm <- lengths(.get_gds_dimnames(file))
     f <- openfn.gds(file)
     on.exit(closefn.gds(f))
-    if (ff == "SEQ_ARRAY" && grepl("genotype$|DP$", node)) {
+    if (ff == "SEQ_ARRAY" && grepl("genotype$|format/DP$", node)) {
         node <- paste0(node, "/data")
     }
     dim <- objdesp.gdsn(index.gdsn(f, node))$dim
@@ -131,6 +131,7 @@
     dimnames
 }
 
+#' @importFrom SNPRelate snpgdsSummary
 ## dimnames for GDSArraySeed must be character!!!
 ## http://bioconductor.org/packages/release/bioc/vignettes/DelayedArray/inst/doc/02-Implementing_a_backend.html#implementing-optimized-backend-specific-methods
 .get_gds_dimnames <- function(file)  
