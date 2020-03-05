@@ -6,31 +6,35 @@
     ff
 }
 
-## .get_gdsnode_isarray <- function(file, node)
-## {
-##     f <- openfn.gds(file)
-##     on.exit(closefn.gds(f))
-    
-##     isarray <- objdesp.gdsn(index.gdsn(f, node))$is.array
-##     return(isarray)
-## }
+## used in .get_gdsnode_non1D_array
+.get_gdsnode_isarray <- function(file, node)
+{
+    ff <- .get_gds_fileFormat(file)
+    if (ff == "SEQ_ARRAY" && grepl("genotype$|format/DP$", node)) {
+        node <- paste0(node, "/data")
+    }    
+    f <- openfn.gds(file)
+    on.exit(closefn.gds(f))
+    isarray <- objdesp.gdsn(index.gdsn(f, node))$is.array
+    return(isarray)
+}
 
-## ## array data with >1 dimensions to pass into assays(se)
-## .get_gdsnode_non1D_array <- function(file)
-## {
-##     names.gdsn <- gdsnodes(file)
-##     isarray <- vapply(names.gdsn,
-##                       function(x) .get_gdsnode_isarray(file, x),
-##                       logical(1))
-##     dims <- lapply(names.gdsn, function(x) .get_gdsnode_dim(file, x))
-##     names.gdsn[
-##         isarray & lengths(dims) > 1 & 
-##         ! vapply(dims, function(x) any(x == 0L), logical(1)) &
-##         !grepl("~", names.gdsn)
-##         ## what's the pattern with genotype/~data, phase/~data,
-##         ## annotation/format/DP/~data
-##     ]
-## }
+## array data with >1 dimensions to pass into assays(se), used in VariantExperiment.
+.get_gdsnode_non1D_array <- function(file)
+{
+    names.gdsn <- gdsnodes(file)
+    isarray <- vapply(names.gdsn,
+                      function(x) .get_gdsnode_isarray(file, x),
+                      logical(1))
+    dims <- lapply(names.gdsn, function(x) .get_gdsnode_dim(file, x))
+    names.gdsn[
+        isarray & lengths(dims) > 1 & 
+        ! vapply(dims, function(x) any(x == 0L), logical(1)) &
+        !grepl("~", names.gdsn)
+        ## what's the pattern with genotype/~data, phase/~data,
+        ## annotation/format/DP/~data
+    ]
+}
 
 .read_gdsnode_sampleInCol <- function(file, node)
 {
