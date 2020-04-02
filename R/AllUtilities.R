@@ -192,10 +192,15 @@
         on.exit(seqClose(f))
         seqSetFilter(f, variant.sel = 1, sample.sel = 1, verbose = FALSE)
         first_val <- seqGetData(f, node)
-        if(is.list(first_val)) {  ## for "annotation/format/DP" only
-            first_val <- first_val$data[1,1]
+        ## if (is.list(first_val)) {  ## for "annotation/format/DP" only
+        ##   first_val <- first_val$data[1,1]
+        ## The above commented coded was due to the SeqArray(1.27.13) commit on 3/31/2020
+        if (is.factor(first_val)) {
+            first_val <- unfactor(first_val)
         } else if (length(dim(first_val)) == 3) { ## for "genotype" only
             first_val <- first_val[1,,]
+        } else if (length(dim(first_val)) == 2) {
+            first_val <- first_val[1,1]
         }
         seqResetFilter(f, verbose = FALSE)
     } else {

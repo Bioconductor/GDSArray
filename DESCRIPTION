@@ -1,6 +1,6 @@
 Package: GDSArray
 Title: Representing GDS files as array-like objects
-Version: 1.7.3
+Version: 1.7.4
 Authors@R: c(
     person(
         "Qian", "Liu", email = "qliu7@buffalo.edu", role=c("aut", "cre")
@@ -29,7 +29,7 @@ Imports:
     S4Vectors (>= 0.17.34),
     SNPRelate,
     SeqArray
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr
 Suggests:
     testthat,

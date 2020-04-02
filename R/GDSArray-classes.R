@@ -62,8 +62,10 @@ setMethod(
             seqSetFilter(f, variant.sel = variant.sel,
                          sample.sel = sample.sel, verbose = FALSE)
             ans <- seqGetData(f, x@name)
-            if (grepl("format/DP", x@name))  ## for "annotation/format/DP" only
-                ans <- ans$data
+            ## if (grepl("format/DP", x@name))  ## for "annotation/format/DP" only
+            ##     ans <- ans$data
+            ## The above commented coded was due to the SeqArray(1.27.13) commit on 3/31/2020
+            if (is.factor(ans)) ans <- unfactor(ans)
             seqResetFilter(f, verbose = FALSE)
             if (x@permute)
                 ans <- aperm(ans)
