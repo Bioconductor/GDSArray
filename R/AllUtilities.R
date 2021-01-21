@@ -1,3 +1,5 @@
+
+## FIXME: not all gds file has attributes...
 .get_gds_fileFormat <- function(file)
 {
     f <- openfn.gds(file)

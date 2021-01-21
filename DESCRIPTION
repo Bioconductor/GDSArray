@@ -6,7 +6,8 @@ Authors@R: c(
         "Qian", "Liu", email = "qliu7@buffalo.edu", role=c("aut", "cre")
     ),
     person("Martin", "Morgan", role = c("aut")),
-    person("Hervé",  "Pagès", role = c("aut")))
+    person("Hervé",  "Pagès", role = c("aut")),
+    person("Xiuwen", "Zheng", email = "zhengx@u.washington.edu", role = c("aut")))
 Description: GDS files are widely used to represent genotyping or
     sequence data. The GDSArray package implements the `GDSArray`
     class to represent nodes in GDS files in a matrix-like
@@ -29,7 +30,7 @@ Imports:
     S4Vectors (>= 0.17.34),
     SNPRelate,
     SeqArray
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr
 Suggests:
     testthat,

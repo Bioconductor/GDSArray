@@ -1,13 +1,14 @@
 
 #' GDSArraySeed or GDSArray related methods, slot getters and setters.
 #' 
+#' @rdname GDSArray-methods
 #' @description \code{dim}, \code{dimnames}: dimension and dimnames of
 #'     object contained in the GDS file.
 #' @param x the \code{GDSArray} and \code{GDSArraySeed} objects.
 #' @return \code{dim}: the integer vector of dimensions for
 #'     \code{GDSArray} or \code{GDSArraySeed} objects.
-#' @rdname GDSArray-methods
-#' @exportMethod dim
+#' @return \code{dimnames}: the unnamed list of dimension names for
+#'     \code{GDSArray} and \code{GDSArraySeed} objects.
 #' @examples
 #' file <- SNPRelate::snpgdsExampleFileName()
 #' ga <- GDSArray(file, "sample.annot/pop.group")
@@ -17,16 +18,13 @@
 #' seed(ga)
 #' dim(seed(ga))
 #' gdsfile(ga)
-setMethod("dim", "GDSArraySeed", function(x) x@dim)
 
-#' @rdname GDSArray-methods
-#' @exportMethod dimnames
-#' @return \code{dimnames}: the unnamed list of dimension names for
-#'     \code{GDSArray} and \code{GDSArraySeed} objects.
-setMethod("dimnames", "GDSArraySeed", function(x) x@dimnames)
+## NOTE: There is no need to define dim() and dimnames() methods for
+## GDSArraySeed/GDSArray objects. This is because the dim() and
+## dimnames() primitive functions in base R return the content of
+## these slots if
+## present. http://bioconductor.org/packages/release/bioc/vignettes/DelayedArray/inst/doc/02-Implementing_a_backend.html#dim-and-dimnames
 
-## setGeneric("seed", function(x) standardGeneric("seed"))
-#' @rdname GDSArray-methods
 #' @exportMethod seed
 #' @description \code{seed}: the \code{GDSArraySeed} getter for
 #'     \code{GDSArray} object.
@@ -44,12 +42,12 @@ setReplaceMethod("seed", "GDSArray", function(x, value) {
     x@seed <- BiocGenerics:::replaceSlots(x, seed=value, check=FALSE)
 })
 
+#' @rdname GDSArray-methods
 #' @description \code{gdsfile}: on-disk location of GDS file
 #'     represented by this object.
 #' @param object GDSArray, GDSMatrix, GDSArraySeed, GDSFile or
 #'     SummarizedExperiment object.
 #' @return \code{gdsfile}: the character string for the gds file path.
-#' @rdname GDSArray-methods
 setGeneric("gdsfile", function(object) standardGeneric("gdsfile"),
            signature="object")
 
@@ -63,10 +61,9 @@ setMethod("gdsfile", "GDSArray", function(object) gdsfile(seed(object)))
 #' @rdname GDSArray-methods
 setMethod("gdsfile", "DelayedArray", function(object) gdsfile(seed(object)))
 
-#' "gdsfile<-"
+#' @rdname GDSArray-methods
 #' @description \code{gdsfile<-}: the setter of the gds file path for
 #'     `GDSArraySeed` and `GDSArray`.
-#' @rdname GDSArray-methods
 setGeneric(
     "gdsfile<-",
     function(object, value) standardGeneric("gdsfile<-"),
