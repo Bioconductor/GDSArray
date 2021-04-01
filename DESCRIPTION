@@ -1,6 +1,6 @@
 Package: GDSArray
 Title: Representing GDS files as array-like objects
-Version: 1.11.0
+Version: 1.11.1
 Authors@R: c(
     person(
         "Qian", "Liu", email = "qliu7@buffalo.edu", role=c("aut", "cre")

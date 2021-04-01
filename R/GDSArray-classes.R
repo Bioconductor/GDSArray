@@ -55,9 +55,11 @@ setMethod(
             variant.sel <- sample.sel <- NULL
             if (any(grepl("variant", nodegroup))) {
                 variant.sel <- index[[grep("variant", nodegroup)]]
+                ## FIXME: duplicate indices?
             }
             if (any(grepl("sample", nodegroup))) {
                 sample.sel <- index[[grep("sample", nodegroup)]]
+                ## FIXME: duplicate indices? 
             }
             seqSetFilter(f, variant.sel = variant.sel,
                          sample.sel = sample.sel, verbose = FALSE)
@@ -69,6 +71,16 @@ setMethod(
             seqResetFilter(f, verbose = FALSE)
             if (x@permute)
                 ans <- aperm(ans)
+
+            ## following is to fix the 3D GDSArray printing error. 3rd
+            ## array from "SEQ_ARRAY" only subsets the first 2 dims, need
+            ## to take care of the 3rd dim here.
+            if (length(ans_dim) > 1 & !identical(dim(ans), ans_dim)){
+                ans <- do.call('[',
+                               c(list(ans),
+                                 list(seq(ans_dim[1]), seq(ans_dim[2])),
+                                 index[-c(1:2)], drop=FALSE))
+            }
         } else {
             f <- openfn.gds(x@file)
             on.exit(closefn.gds(f))
