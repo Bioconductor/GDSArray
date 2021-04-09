@@ -166,7 +166,8 @@
         on.exit(seqClose(f))
         sample.id <- read.gdsn(index.gdsn(f, "sample.id"))
         variant.id <- read.gdsn(index.gdsn(f, "variant.id"))
-        file.summ <- seqSummary(f, verbose=FALSE)
+        ## file.summ <- seqSummary(f, verbose=FALSE)
+        ploidy.id <- objdesp.gdsn(index.gdsn(f, "genotype/data"))$dim[1]
         ## dimSumm <- c(
         ##     ploidy = file.summ$ploidy,
         ##     sample = file.summ$num.sample,
@@ -174,7 +175,7 @@
         ## stopifnot(length(variant.id) == dimSumm["variant"])
         ## stopifnot(length(sample.id) == dimSumm["sample"])
         dimnames <- list(
-            ploidy.id = as.character(seq_len(file.summ$ploidy)),
+            ploidy.id = as.character(seq_len(ploidy.id)),
             sample.id = as.character(sample.id),
             variant.id = as.character(variant.id))
     }
