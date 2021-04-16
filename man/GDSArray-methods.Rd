@@ -68,8 +68,8 @@ SummarizedExperiment object.}
     `GDSArraySeed` and `GDSArray`.
 }
 \examples{
-file <- SNPRelate::snpgdsExampleFileName()
-ga <- GDSArray(file, "sample.annot/pop.group")
+fn <- gdsExampleFileName("snpgds")
+ga <- GDSArray(fn, "sample.annot/pop.group")
 dim(ga)
 dimnames(ga)
 type(ga)

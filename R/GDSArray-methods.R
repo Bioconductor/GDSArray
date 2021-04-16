@@ -1,4 +1,3 @@
-
 #' GDSArraySeed or GDSArray related methods, slot getters and setters.
 #' 
 #' @rdname GDSArray-methods
@@ -10,8 +9,8 @@
 #' @return \code{dimnames}: the unnamed list of dimension names for
 #'     \code{GDSArray} and \code{GDSArraySeed} objects.
 #' @examples
-#' file <- SNPRelate::snpgdsExampleFileName()
-#' ga <- GDSArray(file, "sample.annot/pop.group")
+#' fn <- gdsExampleFileName("snpgds")
+#' ga <- GDSArray(fn, "sample.annot/pop.group")
 #' dim(ga)
 #' dimnames(ga)
 #' type(ga)
@@ -39,7 +38,7 @@ setMethod("seed", "GDSArray", function(x) x@seed)
 #' @param value the new \code{GDSArraySeed} for the \code{GDSArray}
 #'     object.
 setReplaceMethod("seed", "GDSArray", function(x, value) {
-    x@seed <- BiocGenerics:::replaceSlots(x, seed=value, check=FALSE)
+    x@seed <- BiocGenerics:::replaceSlots(x, seed = value, check = FALSE)
 })
 
 #' @rdname GDSArray-methods
@@ -53,7 +52,7 @@ setGeneric("gdsfile", function(object) standardGeneric("gdsfile"),
 
 #' @rdname GDSArray-methods
 #' @exportMethod gdsfile
-setMethod("gdsfile", "GDSArraySeed", function(object) object@file)
+setMethod("gdsfile", "GDSArraySeed", function(object) object@filename)
 
 #' @rdname GDSArray-methods
 setMethod("gdsfile", "GDSArray", function(object) gdsfile(seed(object)))
@@ -74,7 +73,7 @@ setGeneric(
 setReplaceMethod( "gdsfile", "GDSArraySeed", function(object, value) {
     new_filepath <- tools::file_path_as_absolute(value)
     ## Set new path.
-    BiocGenerics:::replaceSlots(object, file=value, check=FALSE)
+    BiocGenerics:::replaceSlots(object, filename = value, check = FALSE)
 })
 
 #' @rdname GDSArray-methods
@@ -82,7 +81,7 @@ setReplaceMethod( "gdsfile", "GDSArraySeed", function(object, value) {
 setReplaceMethod("gdsfile", "GDSArray", function(object, value) {
     new_filepath <- tools::file_path_as_absolute(value)
     object@seed <- BiocGenerics:::replaceSlots(seed(object),
-                                               file=value,
-                                               check=FALSE)
+                                               filename = value,
+                                               check = FALSE)
     object
 })

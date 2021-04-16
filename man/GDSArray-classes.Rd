@@ -14,15 +14,15 @@
 \alias{coerce,ANY,GDSMatrix-method}
 \alias{GDSArray}
 \alias{GDSArray-method}
-\alias{example}
+\alias{gdsExampleFileName}
 \alias{GDSArray-data}
 \title{GDSArray constructor and coercion methods.}
 \usage{
 \S4method{extract_array}{GDSArraySeed}(x, index)
 
-GDSArray(file, name = NA)
+GDSArray(gdsfile, varname)
 
-example(pkg = "GDSArray")
+gdsExampleFileName(type = c("seqgds", "snpgds"))
 }
 \arguments{
 \item{x}{the GDSArraySeed object}
@@ -34,13 +34,14 @@ missing subscripts (represented by \code{integer(0)} and
 subscripts can contain duplicated indices. They cannot contain
 NAs or non-positive values.}
 
-\item{file}{the gds file name.}
+\item{gdsfile}{Can be a GDSArraySeed, a character string of gds
+file name, or an "gds.class" R object.}
 
-\item{name}{the gds array node to be read into GDSArraySeed / GDSArray. For
-\code{GDSArray}, the default value for \code{name} is the
-genotype data.}
+\item{varname}{A character string specifying the gds array node to
+be read into GDSArray.}
 
-\item{pkg}{the package name, which is "GDSArray" by default.}
+\item{type}{the type of gds file, available are "seqgds" for
+\code{SeqVarGDSClass} and "snpgds" for \code{SNPGDSFileClass}.}
 }
 \value{
 \code{GDSArray} class object.
@@ -57,20 +58,20 @@ genotype data.}
 \code{GDSArray} example data
 }
 \examples{
-file <- SNPRelate::snpgdsExampleFileName()
-allnodes <- gdsnodes(file)  ## print all available gds nodes in file.
+fn <- gdsExampleFileName("snpgds") 
+allnodes <- gdsnodes(fn)  ## print all available gds nodes in fn.
 allnodes
-## GDSArray(file) #> deactivate temporarily 3/4/20
-GDSArray(file, "sample.annot/pop.group")
+GDSArray(fn, "genotype")
+GDSArray(fn, "sample.annot/pop.group")
 
-file1 <- SeqArray::seqExampleFileName("gds")
-allnodes1 <- gdsnodes(file1)  ## print all available gds nodes in file1. 
+fn1 <- gdsExampleFileName("seqgds")
+allnodes1 <- gdsnodes(fn1)  ## print all available gds nodes in fn1. 
 allnodes1
-## GDSArray(file1) #> deactivate temporarily 3/4/20
-GDSArray(file1, "variant.id")
-GDSArray(file1, "sample.annotation/family")
-GDSArray(file1, "annotation/format/DP")
-GDSArray(file1, "annotation/info/DP")
-example("GDSArray")
-
+## GDSArray(fn1, "genotype/data")
+GDSArray(fn1, "variant.id")
+GDSArray(fn1, "sample.annotation/family")
+GDSArray(fn1, "annotation/format/DP/data")
+GDSArray(fn1, "annotation/info/DP")
+gdsExampleFileName("snpgds")
+gdsExampleFileName("seqgds")
 }

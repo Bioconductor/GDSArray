@@ -94,10 +94,10 @@ The `GDSArray()` constructor takes as arguments the file path and the
 GDS node inside the GDS file. The `GDSArray()` constructor always
 returns the object with rows being features (genes / variants / snps)
 and the columns being "samples". This is consistent with the assay
-data inside `SummarizedExperiment`.
+data inside `SummarizedExperiment`. **FIXME: should GDSArray() return that dim?**
 
 ```{r, GDSArray}
-file <- SeqArray::seqExampleFileName("gds")
+file <- gdsExampleFileName("snpgds")
 GDSArray(file, "genotype")
 ```
 
@@ -105,25 +105,22 @@ A `GDSMatrix` is a 2-dimensional `GDSArray`, and will be returned from
 the `GDSArray()` constructor automatically if the input GDS node is
 2-dimensional.
 
-```{r, GDSMatrix}
-GDSArray(file, "annotation/format/DP")
-```
-
 ## `GDSFile` 
 
-The `GDSFile` is a light-weight class to represent GDS files. It
-has the `$` completion method to complete any possible gds nodes. It
-could be used as a convenient `GDSArray` constructor if the slot of
-`current_path` in `GDSFile` object represents a valid gds node. 
-Otherwise, it will return the `GDSFile` object with an updated `current_path`.  
+The `GDSFile` is a light-weight class to represent GDS files. It has
+the `$` completion method to complete any possible gds nodes. It could
+be used as a convenient `GDSArray` constructor if the slot of
+`current_path` in `GDSFile` object represents a valid gds node.
+Otherwise, it will return the `GDSFile` object with an updated
+`current_path`.
 
 ```{r, GDSFile}
 gf <- GDSFile(file)
-gf$annotation$info
-gf$annotation$info$AC
+gf$sample.annot
+gf$sample.annot$sex 
 ```
 
-Try typing in `gf$ann` and pressing `tab` key for the completion.  
+Try typing in `gf$sample` and pressing `tab` key for the completion. 
 
 ## `GDSArray` methods
 
@@ -149,16 +146,17 @@ constructor.
 ```{r, gdsnodes}
 gdsnodes(file)
 identical(gdsnodes(file), gdsnodes(gf))
-GDSArray(file, name=gdsnodes(file)[2])
+varname <- gdsnodes(file)[2]
+GDSArray(file, varname)
 ```
 
 ### `dim()`, `dimnames()`
 
-The `dimnames(GDSArray)` returns an unnamed list, with the length of
-each element to be the same as return from `dim(GDSArray)`.
+The `dimnames(GDSArray)` returns an unnamed list, with the value of
+NULL or dimension names with length being the same as return from
+`dim(GDSArray)`.
 
 ```{r, dims}
-ga <- GDSArray(file, "annotation/format/DP")
 dim(ga)
 class(dimnames(ga))
 lengths(dimnames(ga))
@@ -178,23 +176,30 @@ ga[c(TRUE, FALSE), ]
 ### some numeric calculation
 
 ```{r, numeric}
-dp <- GDSArray(file, "annotation/format/DP")
-dp
-log(dp)
+snpid <- GDSArray(file, "snp.id")
+snpid
+snpid[snpid < 100, drop=FALSE]
+log(snpid)
 
-dp[rowMeans(dp) < 60, ]
+snp.chrom <- GDSArray(file, "snp.chromosome")
+snp.chrom[snp.chrom == 23, drop=FALSE]
 ```
 
 ## Internals: `GDSArraySeed`
 
 The `GDSArraySeed` class represents the 'seed' for the `GDSArray`
 object. It is not exported from the [GDSArray][] package. Seed objects
-should contain the GDS file path, and are expected to satisfy the
-“seed contract” i.e. to support dim() and dimnames().
+should contain the gds file of `gds.class`, GDS file path, GDS file
+node name, and are expected to satisfy the [seed
+contract](https://bioconductor.org/packages/release/bioc/vignettes/DelayedArray/inst/doc/02-Implementing_a_backend.html#the-seed-contract)
+for implementing a `DelayedArray` backend, i.e. to support dim() and
+dimnames().
 
 ```{r, GDSArraySeed}
-seed <- GDSArray:::GDSArraySeed(file, "genotype")
+gds <- openfn.gds(file)
+seed <- GDSArray:::GDSArraySeed(gds, "genotype")
 seed
+closefn.gds(gds)
 ```
 
 The seed can be used to construct a `GDSArray` instance.
