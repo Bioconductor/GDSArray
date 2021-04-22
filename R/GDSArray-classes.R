@@ -1,6 +1,6 @@
-### -----------------------------------------------------
+###-----------------------
 ### GDSArraySeed class 
-###
+###-----------------------
 
 setClass("GDSArraySeed",
          contains="Array", # from DelayedArray: A virtual class with no slots
@@ -27,9 +27,10 @@ setClass("GDSArraySeed",
 .varname  <- function(x) x@varname
 ## .dim      <- function(x) x@dim  ## REMOVE: dim() works directly if is one slot.
 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+###--------------------------------------
 ### show method for GDSArraySeed object
-###
+###--------------------------------------
+
 setMethod(
     "show", "GDSArraySeed",
     function(object) {
@@ -41,17 +42,17 @@ setMethod(
     }
 )
 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### extract_array() ## must return array. 
-###
+###-----------------
+### extract_array() 
+###-----------------
 .extract_array_from_GDSArraySeed <- function(x, index)
 {
     ## check
     stopifnot(is.list(index), !anyNA(index))
-    ## FIXME: must support empty (NULL) or missing (integer(0)) index.
-    ##       must support duplicate indices.  cannot contain NAs or
-    ##       non-positive values.
-    ##       https://bioconductor.org/packages/release/bioc/vignettes/DelayedArray/inst/doc/02-Implementing_a_backend.html#extract_array
+    ## NOTE: must support empty (NULL) or missing (integer(0)) index. -- YES!
+    ##       must support duplicate indices. -- works automatically!
+    ##       cannot contain NAs or non-positive values.
+    ## https://bioconductor.org/packages/release/bioc/vignettes/DelayedArray/inst/doc/02-Implementing_a_backend.html#extract_array
     ans_dim <- DelayedArray:::get_Nindex_lengths(index, dim(x))
     # reopen the file if needed
     .reopen(.gds(x))
@@ -95,9 +96,9 @@ setMethod(
 
 setMethod("extract_array", "GDSArraySeed", .extract_array_from_GDSArraySeed)
 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+###---------------------------
 ### GDSArraySeed constructor
-###
+###---------------------------
 
 #' @import methods
 #' @import gdsfmt
@@ -128,9 +129,9 @@ GDSArraySeed <- function(gds, varname)
 ## VariantExperiment it needs to be consistent with the first 2
 ## dimensions).
 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+###--------------------------------
 ### GDSArray and GDSMatrix objects
-###
+###--------------------------------
 ### We define these classes only for cosmetic reasons i.e. to hide the
 ### DelayedArray and DelayedMatrix classes from the user. The user will see
 ### and manipulate GDSArray and GDSMatrix objects instead of DelayedArray
@@ -180,9 +181,9 @@ setAs(
 
 setValidity2("GDSArray", .validate_GDSArray)
 
-### - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-### Constructor
-###
+###-----------------------
+### GDSArray Constructor
+###-----------------------
 
 setMethod(
     "DelayedArray", "GDSArraySeed",
