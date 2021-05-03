@@ -69,7 +69,7 @@ setMethod(
     } else {
         nd <- index.gdsn(.gds(x), .varname(x))
         ## ans <- readex.gdsn(nd, index, .sparse=FALSE)  ## kept from SCArray
-        ans <- readex.gdsn(nd, index)
+        ans <- readex.gdsn(nd, index, simplify = "none")
         if (!is.array(ans))  # ans must be an array 
             dim(ans) <- ans_dim
     }
