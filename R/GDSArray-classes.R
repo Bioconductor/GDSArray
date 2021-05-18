@@ -63,7 +63,7 @@ setMethod(
         tp <- objdesp.gdsn(index.gdsn(.gds(x), .varname(x)))$type
         ans <- switch(as.character(tp),
             Raw=raw(), Integer=integer(), Logical=logical(),
-            Real=double(), String=character(),
+            Real=double(), String=character(), Factor = factor(),
             stop("Unsupported data type: ", tp))
         dim(ans) <- ans_dim
     } else {
