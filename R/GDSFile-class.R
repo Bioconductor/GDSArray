@@ -129,54 +129,52 @@ setMethod("$", "GDSFile", function(x, name)
 
 #' @exportMethod gdsnodes
 
-setGeneric("gdsnodes", function(x) standGeneric(x), signature="x")
+setGeneric("gdsnodes", function(x, node) standardGeneric("gdsnodes"), signature="x")
 
 #' @name gdsnodes
 #' @rdname GDSFile-class
 #' @aliases GDSFile-method gdsnodes,ANY-method gdsnodes,GDSFile-method
-#' @description \code{gdsnodes}: to get the available gds nodes from
-#'     the \code{GDSFile} object or the file path with extension of
-#'     ".gds".
-#' @param x a \code{GDSFile} object. or a character string for the GDS
-#'     file path.
+#' @description \code{gdsnodes}: to get the available gds nodes from a
+#'     gds file name or a \code{GDSFile} object. 
+#' @param x a character string for the GDS file name or a \code{GDSFile} object.
+#' @param node the node name of a gds file or \code{GDSFile} object. 
 #' @return \code{gdsnodes}: a character vector of all available gds
-#'     nodes within the related GDS file. 
+#'     nodes within the related GDS file and the specified node.
 #' @examples
-#' fn <- gdsExampleFileName("snpgds")
+#' fn <- gdsExampleFileName("seqgds")
 #' gdsnodes(fn)
-#' fn1 <- gdsExampleFileName("seqgds")
+#' gdsnodes(fn, "annotation/info")
+#' fn1 <- gdsExampleFileName("snpgds")
 #' gdsnodes(fn1)
+#' gdsnodes(fn1, "sample.annot")
 #' gf <- GDSFile(fn)
 #' gdsnodes(gf)
+#' gdsnodes(gf, "genotype")
 #' gdsfile(gf)
 
-setMethod("gdsnodes", "ANY", function(x)
+setMethod("gdsnodes", "ANY", function(x, node)
 {
     f <- openfn.gds(x)
     on.exit(closefn.gds(f))
-    names.gdsn <- ls.gdsn(f)
+    if (missing(node))
+        node <- ls.gdsn(f)
     repeat {
-        a <- lapply(names.gdsn, function(x) ls.gdsn(index.gdsn(f, x)))
+        a <- lapply(node, function(x) ls.gdsn(index.gdsn(f, x)))
         if (all(lengths(a)==0L)) {
             break
         } else {
             a[lengths(a)==0] <- ""
-            n <- rep(names.gdsn, lengths(a))
-            all.gdsn <- paste(n, unlist(a), sep="/")
+            ns <- rep(node, lengths(a))
+            all.gdsn <- paste(ns, unlist(a), sep="/")
             all.gdsn <- sub("/$", "", all.gdsn)
-            names.gdsn <- all.gdsn
+            node <- all.gdsn
         }
     }
-    names.gdsn
+    node
 })
 
 #' @exportMethod gdsnodes
-setMethod("gdsnodes", "GDSFile", function(x)
+setMethod("gdsnodes", "GDSFile", function(x, node)
 {
-    gdsnodes(gdsfile(x))
+    gdsnodes(gdsfile(x), node)
 })
-
-## todo: 1. GDSFile(seqfile) debug.  -- done! 
-## 2. remove ".get_gdsnode_isarray". Remove, Check, Documentation.
-## 3. remove ".get_gdsnode_first_val"?? used in .extract_array now. 
-## 4. check DDF, VE.

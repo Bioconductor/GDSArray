@@ -23,7 +23,7 @@ GDSFile(file, current_path = "")
 
 \S4method{$}{GDSFile}(x, name)
 
-\S4method{gdsnodes}{ANY}(x)
+\S4method{gdsnodes}{ANY}(x, node)
 }
 \arguments{
 \item{file}{the GDS file path.}
@@ -34,10 +34,11 @@ GDSFile(file, current_path = "")
 
 \item{value}{the new gds file path}
 
-\item{x}{a \code{GDSFile} object. or a character string for the GDS
-file path.}
+\item{x}{a character string for the GDS file name or a \code{GDSFile} object.}
 
 \item{name}{the name of gds node}
+
+\item{node}{the node name of a gds file or \code{GDSFile} object.}
 }
 \value{
 \code{gdsfile}: the file path of corresponding
@@ -48,7 +49,7 @@ file path.}
     gds node.
 
 \code{gdsnodes}: a character vector of all available gds
-    nodes within the related GDS file.
+    nodes within the related GDS file and the specified node.
 }
 \description{
 \code{GDSFile}: \code{GDSFile} is a light-weight class
@@ -66,19 +67,21 @@ file path.}
 \code{gdsfile<-}: \code{file} slot setter for
     \code{GDSFile} object.
 
-\code{gdsnodes}: to get the available gds nodes from
-    the \code{GDSFile} object or the file path with extension of
-    ".gds".
+\code{gdsnodes}: to get the available gds nodes from a
+    gds file name or a \code{GDSFile} object.
 }
 \examples{
 fn <- gdsExampleFileName("seqgds")
 gf <- GDSFile(fn)
 gdsfile(gf)
-fn <- gdsExampleFileName("snpgds")
+fn <- gdsExampleFileName("seqgds")
 gdsnodes(fn)
-fn1 <- gdsExampleFileName("seqgds")
+gdsnodes(fn, "annotation/info")
+fn1 <- gdsExampleFileName("snpgds")
 gdsnodes(fn1)
+gdsnodes(fn1, "sample.annot")
 gf <- GDSFile(fn)
 gdsnodes(gf)
+gdsnodes(gf, "genotype")
 gdsfile(gf)
 }
