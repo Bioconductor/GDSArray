@@ -158,6 +158,15 @@ setMethod("gdsnodes", "ANY", function(x, node)
     on.exit(closefn.gds(f))
     if (missing(node))
         node <- ls.gdsn(f)
+
+    ## check if empty folder, then remove.
+    a <- lapply(node, function(x) ls.gdsn(index.gdsn(f, x)))
+    isfd <- vapply(node,
+                   function(x) objdesp.gdsn(index.gdsn(f, x))$type == "Folder",
+                   logical(1))
+    emptyfd <- lengths(a) == 0 & isfd
+    node <- node[!emptyfd]
+
     repeat {
         a <- lapply(node, function(x) ls.gdsn(index.gdsn(f, x)))
         if (all(lengths(a)==0L)) {
