@@ -1,8 +1,9 @@
 ###----------------
 ### GDSFile class
 ###----------------
-#' @exportClass GDSFile
+
 #' @rdname GDSFile-class
+#' @exportClass GDSFile
 #' @description \code{GDSFile}: \code{GDSFile} is a light-weight class
 #'     to represent a GDS file. It has the `$` completion method to
 #'     complete any possible gds nodes. If the slot of `current_path`
@@ -31,19 +32,20 @@ setMethod("show", "GDSFile", function(object) {
     )
 })
 
-###--------------
-### constructor
-###--------------
+###----------------------
+### GDSFile constructor
+###----------------------
 
 #' GDSFile constructor and methods. 
 #' 
 #' @name GDSFile
+#' @rdname GDSFile-class
+#' @aliases GDSFile-constructor
 #' @description \code{GDSFile}: the \code{GDSFile} class constructor.
 #' @param file the GDS file path.
 #' @param current_path the current path to the closest gds node.
 #' @export
-#' @rdname GDSFile-class
-#' @aliases GDSFile-constructor
+
 GDSFile <- function(file, current_path="")
 {
     new("GDSFile", file = file, current_path = current_path)
@@ -53,27 +55,28 @@ GDSFile <- function(file, current_path="")
 ### accessors
 ###------------
 
-#' @exportMethod gdsfile
 #' @rdname GDSFile-class
 #' @aliases GDSFile-method
 #' @description \code{gdsfile}: \code{file} slot getter for
 #'     \code{GDSFile} object.
 #' @param object \code{GDSFile} object.
-#' @return \code{gdsfile}: the file path of corresponding \code{GDSfile} object.
+#' @return \code{gdsfile}: the file path of corresponding
+#'     \code{GDSfile} object.
+#' @exportMethod gdsfile
+#' @examples
+#' fn <- gdsExampleFileName("seqgds")
+#' gf <- GDSFile(fn)
+#' gdsfile(gf)
 
 setMethod("gdsfile", "GDSFile", function(object) object@file)
 
-#' @exportMethod "gdsfile<-"
 #' @rdname GDSFile-class
 #' @aliases GDSFile-method GDSFile,gdsfile-method
 #' @description \code{gdsfile<-}: \code{file} slot setter for
 #'     \code{GDSFile} object.
 #' @param value the new gds file path
-#' @examples
-#' file <- SeqArray::seqExampleFileName("gds")
-#' gf <- GDSFile(file)
-#' gdsfile(gf)
-#' 
+#' @exportMethod "gdsfile<-"
+
 setReplaceMethod("gdsfile", "GDSFile", function(object, value) {
     new_filepath <- tools::file_path_as_absolute(value)
     BiocGenerics:::replaceSlots(object, file=value, check=FALSE)
@@ -91,14 +94,14 @@ setReplaceMethod("gdsfile", "GDSFile", function(object, value) {
     sub("/.*", "", completions)
 }
 
-#' @exportMethod $
 #' @rdname GDSFile-class
 #' @aliases GDSFile-method
 #' @param name the name of gds node
 #' @return \code{$}: a \code{GDSFile} with updated \code{@current_path}, or
 #'     \code{GDSArray} object if the \code{current_path} is a valid
 #'     gds node.
-#' 
+#' @exportMethod $
+
 setMethod("$", "GDSFile", function(x, name)
 {
     if (nzchar(x@current_path)) {
@@ -126,91 +129,61 @@ setMethod("$", "GDSFile", function(x, name)
 
 #' @exportMethod gdsnodes
 
-setGeneric("gdsnodes", function(x) standGeneric(x), signature="x")
+setGeneric("gdsnodes", function(x, node) standardGeneric("gdsnodes"), signature="x")
 
 #' @name gdsnodes
 #' @rdname GDSFile-class
 #' @aliases GDSFile-method gdsnodes,ANY-method gdsnodes,GDSFile-method
-#' @description \code{gdsnodes}: to get the available gds nodes from
-#'     the \code{GDSFile} object or the file path with extension of
-#'     ".gds".
-#' @param x a \code{GDSFile} object. or GDS file path (for
-#'     \code{gdsnodes()}).
-#' @return \code{gdsnodes}: a character vector for the available gds
-#'     nodes. When input is GDS file path, it returns all available
-#'     gds nodes within the GDS file, no matter there is value or
-#'     not. When input is \code{GDSFile} object, it returns only the
-#'     gds nodes that could construct unique \code{GDSArray} objects,
-#'     which means that the gds node has non-zero-dimensions, and is
-#'     actually array, and all \code{GDSArray}s returned from these
-#'     nodes are unique (by excluding the gds nodes that has `code{~}
-#'     prefix).
+#' @description \code{gdsnodes}: to get the available gds nodes from a
+#'     gds file name or a \code{GDSFile} object. 
+#' @param x a character string for the GDS file name or a \code{GDSFile} object.
+#' @param node the node name of a gds file or \code{GDSFile} object. 
+#' @return \code{gdsnodes}: a character vector of all available gds
+#'     nodes within the related GDS file and the specified node.
 #' @examples
-#' file <- SNPRelate::snpgdsExampleFileName()
-#' gdsnodes(file)
-#' file1 <- SeqArray::seqExampleFileName("gds")
-#' gdsnodes(file1)
-#' gf <- GDSFile(file)
+#' fn <- gdsExampleFileName("seqgds")
+#' gdsnodes(fn)
+#' gdsnodes(fn, "annotation/info")
+#' fn1 <- gdsExampleFileName("snpgds")
+#' gdsnodes(fn1)
+#' gdsnodes(fn1, "sample.annot")
+#' gf <- GDSFile(fn)
 #' gdsnodes(gf)
+#' gdsnodes(gf, "genotype")
 #' gdsfile(gf)
-setMethod("gdsnodes", "ANY", function(x)
+
+setMethod("gdsnodes", "ANY", function(x, node)
 {
-    ff <- .get_gds_fileFormat(x)
-    if (ff == "SEQ_ARRAY") {
-        cmnnodes <- c("sample.id", "variant.id", "position",
-                         "chromosome", "allele", "genotype",
-                         "annotation/id", "annotation/qual",
-                         "annotation/filter")
-        f <- seqOpen(x)
-        on.exit(seqClose(f))
-        info.nodes <- ls.gdsn(index.gdsn(f, "annotation/info"))
-        format.nodes <- ls.gdsn(index.gdsn(f, "annotation/format"))
-        names.gdsn <- c(cmnnodes, paste0("annotation/info/", info.nodes),
-                        paste0("annotation/format/", format.nodes))
-    } else {
-        f <- openfn.gds(x)
-        on.exit(closefn.gds(f))
-        names.gdsn <- ls.gdsn(f)
-        repeat {
-            a <- lapply(names.gdsn, function(x) ls.gdsn(index.gdsn(f, x)))
-            if (all(lengths(a)==0L)) {
-                break
-            } else {
-                a[lengths(a)==0] <- ""
-                n <- rep(names.gdsn, lengths(a))
-                all.gdsn <- paste(n, unlist(a), sep="/")
-                all.gdsn <- sub("/$", "", all.gdsn)
-                names.gdsn <- all.gdsn
-            }
+    f <- openfn.gds(x)
+    on.exit(closefn.gds(f))
+    if (missing(node))
+        node <- ls.gdsn(f)
+
+    ## check if empty folder, then remove.
+    a <- lapply(node, function(x) ls.gdsn(index.gdsn(f, x)))
+    isfd <- vapply(node,
+                   function(x) objdesp.gdsn(index.gdsn(f, x))$type == "Folder",
+                   logical(1))
+    emptyfd <- lengths(a) == 0 & isfd
+    node <- node[!emptyfd]
+
+    repeat {
+        a <- lapply(node, function(x) ls.gdsn(index.gdsn(f, x)))
+        if (all(lengths(a)==0L)) {
+            break
+        } else {
+            a[lengths(a)==0] <- ""
+            ns <- rep(node, lengths(a))
+            all.gdsn <- paste(ns, unlist(a), sep="/")
+            all.gdsn <- sub("/$", "", all.gdsn)
+            node <- all.gdsn
         }
     }
-    names.gdsn
+    node
 })
 
 #' @exportMethod gdsnodes
-setMethod("gdsnodes", "GDSFile", function(x)
+setMethod("gdsnodes", "GDSFile", function(x, node)
 {
-    nodes <- gdsnodes(gdsfile(x))
+    gdsnodes(gdsfile(x), node)
 })
-
-## #' @exportMethod gdsnodes
-## setMethod("gdsnodes", "GDSFile", function(x)
-## {
-##     nodes <- gdsnodes(gdsfile(x))
-##     isarray <- vapply(nodes, function(node)
-##         .get_gdsnode_isarray(gdsfile(x), node),
-##         logical(1))
-##     permuted_same_data <- grepl("~", nodes)
-##     dims <- lapply(nodes, function(node)
-##                    .get_gdsnode_dim(gdsfile(x), node))
-##     isnull_dims <- vapply(dims, is.null, logical(1))
-##     any_zero_dims <- vapply(dims, function(dim) any(dim == 0), logical(1))
-
-##     nodes[isarray & !permuted_same_data & !isnull_dims & !any_zero_dims]
-## })
-
-
-## todo: 1. GDSFile(seqfile) debug.  -- done! 
-## 2. remove ".get_gdsnode_isarray". Remove, Check, Documentation.
-## 3. remove ".get_gdsnode_first_val"?? used in .extract_array now. 
-## 4. check DDF, VE.

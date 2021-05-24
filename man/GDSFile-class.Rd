@@ -23,7 +23,7 @@ GDSFile(file, current_path = "")
 
 \S4method{$}{GDSFile}(x, name)
 
-\S4method{gdsnodes}{ANY}(x)
+\S4method{gdsnodes}{ANY}(x, node)
 }
 \arguments{
 \item{file}{the GDS file path.}
@@ -34,27 +34,22 @@ GDSFile(file, current_path = "")
 
 \item{value}{the new gds file path}
 
-\item{x}{a \code{GDSFile} object. or GDS file path (for
-\code{gdsnodes()}).}
+\item{x}{a character string for the GDS file name or a \code{GDSFile} object.}
 
 \item{name}{the name of gds node}
+
+\item{node}{the node name of a gds file or \code{GDSFile} object.}
 }
 \value{
-\code{gdsfile}: the file path of corresponding \code{GDSfile} object.
+\code{gdsfile}: the file path of corresponding
+    \code{GDSfile} object.
 
 \code{$}: a \code{GDSFile} with updated \code{@current_path}, or
     \code{GDSArray} object if the \code{current_path} is a valid
     gds node.
 
-\code{gdsnodes}: a character vector for the available gds
-    nodes. When input is GDS file path, it returns all available
-    gds nodes within the GDS file, no matter there is value or
-    not. When input is \code{GDSFile} object, it returns only the
-    gds nodes that could construct unique \code{GDSArray} objects,
-    which means that the gds node has non-zero-dimensions, and is
-    actually array, and all \code{GDSArray}s returned from these
-    nodes are unique (by excluding the gds nodes that has `code{~}
-    prefix).
+\code{gdsnodes}: a character vector of all available gds
+    nodes within the related GDS file and the specified node.
 }
 \description{
 \code{GDSFile}: \code{GDSFile} is a light-weight class
@@ -72,20 +67,21 @@ GDSFile(file, current_path = "")
 \code{gdsfile<-}: \code{file} slot setter for
     \code{GDSFile} object.
 
-\code{gdsnodes}: to get the available gds nodes from
-    the \code{GDSFile} object or the file path with extension of
-    ".gds".
+\code{gdsnodes}: to get the available gds nodes from a
+    gds file name or a \code{GDSFile} object.
 }
 \examples{
-file <- SeqArray::seqExampleFileName("gds")
-gf <- GDSFile(file)
+fn <- gdsExampleFileName("seqgds")
+gf <- GDSFile(fn)
 gdsfile(gf)
-
-file <- SNPRelate::snpgdsExampleFileName()
-gdsnodes(file)
-file1 <- SeqArray::seqExampleFileName("gds")
-gdsnodes(file1)
-gf <- GDSFile(file)
+fn <- gdsExampleFileName("seqgds")
+gdsnodes(fn)
+gdsnodes(fn, "annotation/info")
+fn1 <- gdsExampleFileName("snpgds")
+gdsnodes(fn1)
+gdsnodes(fn1, "sample.annot")
+gf <- GDSFile(fn)
 gdsnodes(gf)
+gdsnodes(gf, "genotype")
 gdsfile(gf)
 }

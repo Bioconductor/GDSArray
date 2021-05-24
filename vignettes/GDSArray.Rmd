@@ -31,12 +31,14 @@ objects derived from the [DelayedArray][] package and `DelayedArray`
 class. It converts a GDS node in the file to a `DelayedArray`-derived
 data structure. The rich common methods and data operations defined on
 `GDSArray` makes it more _R_-user-friendly than working with the GDS
-file directly. The array data from GDS files are always returned with
-the first dimension being `variants/snps` and the second dimension
-being `samples`. This feature is consistent with the assay data saved
-in `SummarizedExperiment`, and makes the `GDSArray` package
-interoperable with other established _Bioconductor_ data
-infrastructure.
+file directly. 
+
+<!-- The array data from GDS files are always returned with -->
+<!-- the first dimension being `variants/snps` and the second dimension -->
+<!-- being `samples`. This feature is consistent with the assay data saved -->
+<!-- in `SummarizedExperiment`, and makes the `GDSArray` package -->
+<!-- interoperable with other established _Bioconductor_ data -->
+<!-- infrastructure. -->
 
 [GDSArray]: https://bioconductor.org/packages/GDSArray
 [DelayedArray]: https://bioconductor.org/packages/DelayedArray
@@ -65,14 +67,14 @@ interface to CoreArray Genomic Data Structure (GDS) data files, which
 is designed for large-scale datasets, especially for data which are
 much larger than the available random-access memory.
 
-The GDS format has been widely used in genetic/genomic research for
-high-throughput genotyping or sequencing data. There are two major
-classes that extends the `gds.class`: `SNPGDSFileClass` suited for
-genotyping data (e.g., GWAS), and `SeqVarGDSClass` that are designed
-specifically for DNA-sequencing data. The file format attribute in
-each data class is set as `SNP_ARRAY` and `SEQ_ARRAY`. There are rich
-functions written based on these data classes for common data
-operation and statistical analysis.
+<!-- The GDS format has been widely used in genetic/genomic research for -->
+<!-- high-throughput genotyping or sequencing data. There are two major -->
+<!-- classes that extends the `gds.class`: `SNPGDSFileClass` suited for -->
+<!-- genotyping data (e.g., GWAS), and `SeqVarGDSClass` that are designed -->
+<!-- specifically for DNA-sequencing data. The file format attribute in -->
+<!-- each data class is set as `SNP_ARRAY` and `SEQ_ARRAY`. There are rich -->
+<!-- functions written based on these data classes for common data -->
+<!-- operation and statistical analysis. -->
 
 More details about GDS format can be found in the vignettes of the
 [gdsfmt][], [SNPRelate][], and [SeqArray][] packages.
@@ -94,11 +96,11 @@ The `GDSArray()` constructor takes as arguments the file path and the
 GDS node inside the GDS file. The `GDSArray()` constructor always
 returns the object with rows being features (genes / variants / snps)
 and the columns being "samples". This is consistent with the assay
-data inside `SummarizedExperiment`.
+data inside `SummarizedExperiment`. **FIXME: should GDSArray() return that dim?**
 
 ```{r, GDSArray}
-file <- SeqArray::seqExampleFileName("gds")
-GDSArray(file, "genotype")
+file <- gdsExampleFileName("seqgds")
+GDSArray(file, "genotype/data")
 ```
 
 A `GDSMatrix` is a 2-dimensional `GDSArray`, and will be returned from
@@ -106,16 +108,17 @@ the `GDSArray()` constructor automatically if the input GDS node is
 2-dimensional.
 
 ```{r, GDSMatrix}
-GDSArray(file, "annotation/format/DP")
+GDSArray(file, "annotation/format/DP/data")
 ```
 
 ## `GDSFile` 
 
-The `GDSFile` is a light-weight class to represent GDS files. It
-has the `$` completion method to complete any possible gds nodes. It
-could be used as a convenient `GDSArray` constructor if the slot of
-`current_path` in `GDSFile` object represents a valid gds node. 
-Otherwise, it will return the `GDSFile` object with an updated `current_path`.  
+The `GDSFile` is a light-weight class to represent GDS files. It has
+the `$` completion method to complete any possible gds nodes. It could
+be used as a convenient `GDSArray` constructor if the slot of
+`current_path` in `GDSFile` object represents a valid gds node.
+Otherwise, it will return the `GDSFile` object with an updated
+`current_path`.
 
 ```{r, GDSFile}
 gf <- GDSFile(file)
@@ -123,20 +126,20 @@ gf$annotation$info
 gf$annotation$info$AC
 ```
 
-Try typing in `gf$ann` and pressing `tab` key for the completion.  
+Try typing in `gf$ann` and pressing `tab` key for the completion. 
 
 ## `GDSArray` methods
 
 ### slot accessors. 
 - `seed` returns the `GDSArraySeed` of the `GDSArray` object.
 ```{r, seedAccessor}
-ga <- GDSArray(file, "genotype")
-seed(ga)
+gt <- GDSArray(file, "genotype/data")
+seed(gt)
 ```
 
 - `gdsfile` returns the file path of the corresponding GDS file. 
 ```{r, gdsfileAccessor}
-gdsfile(ga)
+gdsfile(gt)
 ```
 
 ### Available GDS nodes
@@ -149,19 +152,21 @@ constructor.
 ```{r, gdsnodes}
 gdsnodes(file)
 identical(gdsnodes(file), gdsnodes(gf))
-GDSArray(file, name=gdsnodes(file)[2])
+varname <- gdsnodes(file)[2]
+GDSArray(file, varname)
 ```
 
 ### `dim()`, `dimnames()`
 
-The `dimnames(GDSArray)` returns an unnamed list, with the length of
-each element to be the same as return from `dim(GDSArray)`.
+The `dimnames(GDSArray)` returns an unnamed list, with the value of
+NULL or dimension names with length being the same as return from
+`dim(GDSArray)`.
 
 ```{r, dims}
-ga <- GDSArray(file, "annotation/format/DP")
-dim(ga)
-class(dimnames(ga))
-lengths(dimnames(ga))
+dp <- GDSArray(file, "annotation/format/DP/data")
+dim(dp)
+class(dimnames(dp))
+lengths(dimnames(dp))
 ```
 
 ### `[` subsetting
@@ -171,17 +176,14 @@ conventions, with numeric or logical vectors; logical vectors are
 recycled to the appropriate length.
 
 ```{r, methods}
-ga[1:3, 10:15]
-ga[c(TRUE, FALSE), ]
+dp[1:3, 10:15]
+dp[c(TRUE, FALSE), ]
 ```
 
 ### some numeric calculation
 
 ```{r, numeric}
-dp <- GDSArray(file, "annotation/format/DP")
-dp
 log(dp)
-
 dp[rowMeans(dp) < 60, ]
 ```
 
@@ -189,12 +191,17 @@ dp[rowMeans(dp) < 60, ]
 
 The `GDSArraySeed` class represents the 'seed' for the `GDSArray`
 object. It is not exported from the [GDSArray][] package. Seed objects
-should contain the GDS file path, and are expected to satisfy the
-“seed contract” i.e. to support dim() and dimnames().
+should contain the gds file of `gds.class`, GDS file path, GDS file
+node name, and are expected to satisfy the [seed
+contract](https://bioconductor.org/packages/release/bioc/vignettes/DelayedArray/inst/doc/02-Implementing_a_backend.html#the-seed-contract)
+for implementing a `DelayedArray` backend, i.e. to support dim() and
+dimnames().
 
 ```{r, GDSArraySeed}
-seed <- GDSArray:::GDSArraySeed(file, "genotype")
+gds <- openfn.gds(file)
+seed <- GDSArray:::GDSArraySeed(gds, "genotype/data")
 seed
+closefn.gds(gds)
 ```
 
 The seed can be used to construct a `GDSArray` instance.
@@ -216,3 +223,5 @@ class(DelayedArray(seed))
 ```{r, sessionInfo}
 sessionInfo()
 ```
+
+

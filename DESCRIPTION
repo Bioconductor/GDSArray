@@ -35,5 +35,7 @@ VignetteBuilder: knitr
 Suggests:
     testthat,
     knitr,
+    markdown,
+    rmarkdown,
     BiocStyle,
     BiocManager
