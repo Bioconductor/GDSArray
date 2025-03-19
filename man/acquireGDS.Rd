@@ -19,7 +19,7 @@ was added for the \code{VariantExperiment} package for certain
 functionalities. By default is NULL, which returns a regular
 \code{gds.class}.}
 
-\item{other}{arguments to be passed to \code{openfn.gds()} inside
+\item{...}{arguments to be passed to \code{openfn.gds()} inside
 \code{acquireGDS}.}
 }
 \value{

@@ -8,6 +8,7 @@
 \alias{gdsfile,GDSFile-method}
 \alias{GDSFile-method}
 \alias{gdsfile<-}
+\alias{gdsfile<-,GDSFile-method}
 \alias{GDSFile,gdsfile-method}
 \alias{$,GDSFile-method}
 \alias{gdsnodes}
